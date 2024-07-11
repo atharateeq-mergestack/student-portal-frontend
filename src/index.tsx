@@ -1,17 +1,20 @@
-// src/index.tsx
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import ReactDOM from 'react-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import reportWebVitals from './reportWebVitals';
+import App from 'App';
+import './index.css';
+import { toastConfig } from 'utils/toastConfig';
 
 const rootElement = document.getElementById('root') as HTMLElement;
-const root = ReactDOM.createRoot(rootElement);
 
-root.render(
+ReactDOM.render(
   <React.StrictMode>
+    <ToastContainer {...toastConfig}/>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
+  rootElement
 );
 
 reportWebVitals();

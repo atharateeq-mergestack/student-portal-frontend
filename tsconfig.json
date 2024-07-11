@@ -18,14 +18,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "paths": {
+      "api/*": ["api/*"],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"],
+      "utils/*": ["utils/*"]
+    }
   },
-  "include": [
-    "src"
-  ],
-  "baseUrl": "./src",
-  "paths": {
-    "@components/*": ["components/*"],
-    "@pages/*": ["components/*"]
-  }
+  "include": ["src"]
 }

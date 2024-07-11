@@ -1,12 +1,10 @@
-// src/App.tsx
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Signup from './pages/Signup/signup';
-import Dashboard from './pages/Dashboard';
-import Student from './pages/Student';
-import ProtectedRoute from './components/ProtectedRoute';
 import Cookies from 'js-cookie';
-import Login from './pages/Login/login';
+import ProtectedRoute from 'components/ProtectedRoute';
+import Login from 'pages/Login/Login';
+import Signup from 'pages/Signup/Signup';
+import Dashboard from 'pages/Dashboard';
+import Student from 'pages/Student';
 
 const isAuthenticated = () => {
   return !!Cookies.get('token');
@@ -26,6 +24,12 @@ function App() {
           path="/signup"
           element={
             isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Signup />
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />
           }
         />
         <Route element={<ProtectedRoute />}>
