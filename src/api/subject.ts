@@ -1,10 +1,14 @@
-import axios from 'axios';
-import { IApiResponse, ILogin, ISignup } from 'utils/interface';
+import axiosInstance from 'utils/axiosInstance';
+import { IApiResponse, ICreateSubject } from 'utils/interface';
 import { CONSTANTS } from 'utils/constant';
+import axios from 'axios';
 
-export const signupUser = async (data: ISignup): Promise<IApiResponse> => {
+export const createSubject = async (data: ICreateSubject): Promise<IApiResponse> => {
     try {
-        const response = await axios.post<IApiResponse>(`${CONSTANTS.BASE_URL}${CONSTANTS.ENDPOINTS.USER}`, data);
+        const response = await axiosInstance.post<IApiResponse>(
+            CONSTANTS.ENDPOINTS.SUBJECT, 
+            data
+        );
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -15,9 +19,10 @@ export const signupUser = async (data: ISignup): Promise<IApiResponse> => {
     }
 };
 
-export const loginUser = async (data: ILogin): Promise<IApiResponse> => {
+
+export const fetchSubjects = async (): Promise<IApiResponse> => {
     try {
-        const response = await axios.post<IApiResponse>(`${CONSTANTS.BASE_URL}${CONSTANTS.ENDPOINTS.LOGIN}`, data);
+        const response = await axiosInstance.get<IApiResponse>(CONSTANTS.ENDPOINTS.SUBJECT);
         return response.data;
     } catch (error) {
         if (axios.isAxiosError(error)) {

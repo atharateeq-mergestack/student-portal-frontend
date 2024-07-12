@@ -25,7 +25,7 @@ function Login () {
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
   try {
     const response : IApiResponse = await loginUser(data);
-    const token = response.data;
+    const token : any = response.data;
     const expirationTime = CONSTANTS.TOKEN_EXPIRE;
     Cookies.set('token', token, { expires: new Date(Date.now() + expirationTime) });
     if (response.success) {

@@ -1,0 +1,175 @@
+.dashboard-top-container {
+  width: 100%;
+  max-width: 1300px;
+  background: #ffffff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  position: relative;
+}
+
+.dashboard-top-header {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  color: #000000;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.bar-line{
+  width: 100%;
+}
+
+.dashboard-container {
+  width: 100%;
+  max-width: 1300px;
+  background: #ffffff;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  position: relative;
+}
+
+.dashboard-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-text{
+  justify-content: flex-start;
+ }
+.header-button{
+  justify-content: flex-end;
+ }
+
+.header-text h1{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  color: #000000;
+  justify-content: flex-start;
+ }
+
+ .header-button button{
+  background-color: #EFF2F7;
+  width: 113px;
+  height: 44px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #343744;
+  border: #243b9e 3px;
+  border-radius: 8px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+ }
+
+.summary-section {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  width: 140px;
+  height: 100px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+}
+
+.summary-card-green {
+  background: #4aaa9a;
+}
+
+.summary-card-red {
+  background: #ff6897;
+}
+
+.summary-title {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.summary-value {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.table-section {
+  margin-top: 20px;
+  width: 100%;
+  overflow-x: auto; /* Ensure horizontal scrolling */
+  overflow-y: hidden; /* Remove vertical scrolling */
+  max-height: 100%; /* Adjust as needed */
+}
+
+.table-header {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+  border-bottom: 2px solid #f7f7f7;
+}
+
+.table-header-item,
+.table-cell {
+  flex: 1 0 150px; /* Adjust width or flex as needed */
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #343744;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.table-row {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+  border-bottom: 1px solid #f7f7f7;
+  white-space: nowrap; /* Prevent wrapping */
+  position: relative;
+}
+
+.grade {
+  border-radius: 8px;
+  width: 110.33px; /* Adjust size as needed */
+  height: 38px; /* Adjust size as needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.a-plus-minus {
+  background: #686563;
+  color: #c0c0c0;
+}
+
+.b-plus-minus {
+  background: #fff7f5;
+  color: #ffb59d;
+}
+
+.f {
+  background: #ffb59d;
+  color: #ff6897;
+}
+
+.action-button {
+  /* transform: rotate(90deg);  */
+  cursor: pointer;
+  position: relative;
+}
