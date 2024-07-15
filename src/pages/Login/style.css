@@ -1,0 +1,107 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  max-width: 564px;
+  margin: 0 auto;
+}
+
+.login-container h1 {
+  margin-bottom: 20px;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-container .form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.login-container  .show-password-label{
+  font-size: 12px;
+  line-height: 18px;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+.login-container  .show-password-lable label{
+  font-size: 12px;
+  line-height: 18px;
+  color: #666666;
+}
+
+.show-password-lable input{ 
+  height: 10px;
+}
+
+.login-container .form-group input {
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 56px;
+  padding: 16px;
+  margin-top: 10px;
+}
+
+.login-container .form-group .input-error {
+  border-color: red;
+}
+
+.login-container .form-group p {
+  color: #EB5757;
+  font-size: 12px;
+  margin: 5px 0 0 0;
+}
+
+.login-container .form-group .error-icon {
+  position: absolute;
+  right: 2%;
+  top: 55%;
+  transform: translateY(-50%);
+  color: #EB5757;
+}
+
+.login-container .form-group .password-input {
+  position: relative;
+}
+
+.login-container .form-group input  {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+}
+  
+  .login-container .form-group button[type="submit"] {
+  padding: 10px 20px;
+  background-color: #4aaa9a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .login-container {
+    padding: 10px;
+  }
+
+  .login-container h1 {
+    font-size: 24px;
+  }
+
+  .login-container .form-group button[type="submit"] {
+    font-size: 14px;
+  }
+}
