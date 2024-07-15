@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { IApiResponse, ILogin, ISignup } from 'utils/interface';
+
+import { IApiResponse, ILogin, ISignup } from 'utils/types';
 import { CONSTANTS } from 'utils/constant';
 
 export const signupUser = async (data: ISignup): Promise<IApiResponse> => {

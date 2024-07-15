@@ -6,3 +6,18 @@ export const grades = [
     { value: 'F', label: 'F' }
   ];
   
+ export const getGradeClassName = (grade: string) => {
+    switch (grade) {
+      case 'A+':
+      case 'A-':
+        return 'a-plus-minus';
+      case 'B+':
+      case 'B-':
+        return 'b-plus-minus';
+      case 'F':
+        return 'f';
+      default:
+        return '';
+    }
+  };
+  

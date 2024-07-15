@@ -1,7 +1,8 @@
-import axiosInstance from 'utils/axiosInstance';
-import { IApiResponse, ICreateSubject } from 'utils/interface';
-import { CONSTANTS } from 'utils/constant';
 import axios from 'axios';
+
+import { IApiResponse, ICreateSubject } from 'utils/types';
+import { CONSTANTS } from 'utils/constant';
+import axiosInstance from 'utils/axiosInstance';
 
 export const createSubject = async (data: ICreateSubject): Promise<IApiResponse> => {
     try {
@@ -18,7 +19,6 @@ export const createSubject = async (data: ICreateSubject): Promise<IApiResponse>
         }
     }
 };
-
 
 export const fetchSubjects = async (): Promise<IApiResponse> => {
     try {

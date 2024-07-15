@@ -7,5 +7,6 @@ export const CONSTANTS = {
         SUBJECT: '/api/subject',
         RESULT: '/api/result',
     },
-    TOKEN_EXPIRE: 3600 * 1000
+    TOKEN_EXPIRE: 3600 * 1000,
+    GRADES: ['A+', 'A-', 'B+', 'B-', 'F'],
 };

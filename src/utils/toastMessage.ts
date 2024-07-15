@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { IApiResponse } from './interface';
+import { IApiResponse } from './types';
 
 export const showToast = (toastData: IApiResponse) => {
   if (Array.isArray(toastData.message)) {

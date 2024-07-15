@@ -1,10 +1,5 @@
-import './style.css'; 
-
-interface ModalProps {
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { ModalProps } from 'utils/types';
+import 'components/Modal/style.css'; 
 
 function Modal ({ message, onConfirm, onCancel } : ModalProps) {
   return (

@@ -2,34 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AiFillExclamationCircle } from 'react-icons/ai';
 import { omitBy } from 'lodash';
-import Select from 'react-select';
+
 import { resultSchema } from 'utils/validationSchema';
-import { IApiResponse, ICreateResult, ISubject } from 'utils/interface';
+import { IApiResponse, ICreateResult, ISubject } from 'utils/types';
 import { grades } from 'utils/grades';
-import showToast from 'utils/toastMessage';
 import { createResult, updateResult } from 'api/result';
 import { fetchSubjects } from 'api/subject';
-import './style.css';
+import SelectComponent from 'components/SelectComponent';
+import showToast from 'utils/toastMessage';
+import Input from 'components/Input';
+import 'pages/AddResult/style.css';
 
 function AddResult() {
   const navigate = useNavigate();
   const location = useLocation();
   const existingData = location.state?.student;
   const isUpdate = location.state?.isUpdate || false;
-  const [subjects, setSubjects] = useState<{ value: string, label: string }[]>([]);
+  const [subjects, setSubjects] = useState<{ value: string; label: string }[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
     mode: 'onBlur',
-    defaultValues: {...existingData, subjectId: existingData?.subjectId._id} || {}
+    defaultValues: { ...existingData, subjectId: existingData?.subjectId._id } || {}
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const subjectsResponse = await fetchSubjects();        
+        const subjectsResponse = await fetchSubjects();
         if (subjectsResponse.data) {
           const formattedSubjects = subjectsResponse.data.map((subject: ISubject) => ({
             value: subject._id,
@@ -51,7 +52,7 @@ function AddResult() {
       let response: IApiResponse;
       if (isUpdate && existingData) {
         response = await updateResult(existingData._id, filteredData);
-      } else {        
+      } else {
         response = await createResult(filteredData);
       }
 
@@ -72,86 +73,62 @@ function AddResult() {
     setValue('grade', selectedOption.value);
   };
 
-  const customStyles = {
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: '#757575',
-      fontSize: '13px',
-      padding: '10px'
-    }),
-    indicatorSeparator: () => ({}),
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: '#333',
-      fontSize: '13px',
-      padding: '10px'
-    })
-  };
-
   return (
     <div className="result-container">
-      <h1>{isUpdate ? 'Update' : 'Add'} Result</h1>
+      <h1>{isUpdate ? 'Update' : 'Add'} Student Data</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label htmlFor="studentName">Student Name</label>
-          <input
-            type="text"
-            id="studentName"
-            placeholder="Enter student name"
-            {...register('studentName')}
-            className={errors.studentName ? 'input-error' : ''}
-          />
-          {errors.studentName && <AiFillExclamationCircle className="error-icon" />}
-          {errors.studentName && <p>{errors.studentName.message}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="subjectId">Subject</label>
-          <Select
-            id="subjectId"
-            options={subjects}
-            onChange={handleSubjectChange}
-            classNamePrefix="react-select"
-            className={errors.subjectId ? 'input-error' : ''}
-            placeholder="Select a subject"
-            styles={customStyles}
-            defaultValue={ existingData && {value: existingData.subjectId._id, label: existingData.subjectId.subjectName}}
-          />
-          {errors.subjectId && <AiFillExclamationCircle className="error-icon" />}
-          {errors.subjectId && <p>{errors.subjectId.message}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="marks">Marks</label>
-          <input
-            type="number"
-            id="marks"
-            placeholder="Enter marks"
-            {...register('marks')}
-            className={errors.marks ? 'input-error' : ''}
-          />
-          {errors.marks && <AiFillExclamationCircle className="error-icon" />}
-          {errors.marks && <p>{errors.marks.message}</p>}
-        </div>
-        <div className="form-group">
-          <label htmlFor="grade">Grade</label>
-          <Select
-            id="grade"
-            options={grades}
-            onChange={handleGradeChange}
-            classNamePrefix="react-select"
-            className={errors.grade ? 'input-error' : ''}
-            placeholder="Select a grade"
-            styles={customStyles}
-            defaultValue={grades.find(grade => grade.value === existingData?.grade)}
-          />
-          {errors.grade && <AiFillExclamationCircle className="error-icon" />}
-          {errors.grade && <p>{errors.grade.message}</p>}
-        </div>
+
+        <Input 
+          id="studentName" 
+          label="Student Name" 
+          type="text" 
+          placeholder="Enter student name" 
+          register={register} 
+          error={errors.studentName} 
+        />
+
+        <SelectComponent
+          id="subjectId"
+          label="Subject"
+          options={subjects}
+          onChange={handleSubjectChange}
+          classNamePrefix="react-select"
+          className={errors.subjectId ? 'input-error' : ''}
+          placeholder="Select a subject"
+          defaultValue={
+            existingData && { value: existingData.subjectId._id, label: existingData.subjectId.subjectName }
+          }
+          error={errors.subjectId}
+        />
+
+        <Input 
+          id="marks" 
+          label="Marks" 
+          type="text" 
+          placeholder="Enter marks" 
+          register={register} 
+          error={errors.marks} 
+        />
+
+        <SelectComponent
+          id="grade"
+          label="Grade"
+          options={grades}
+          onChange={handleGradeChange}
+          classNamePrefix="react-select"
+          className={errors.grade ? 'input-error' : ''}
+          placeholder="Select a grade"
+          defaultValue={grades.find(grade => grade.value === existingData?.grade)}
+          error={errors.grade}
+        />
+
         <div className="form-group">
           <div className='button-group'>
             <button type="button" onClick={() => navigate('/dashboard')}>Cancel</button>
             <button type="submit">{isUpdate ? 'Update' : 'Add'}</button>
           </div>
         </div>
+        
       </form>
     </div>
   );

@@ -1,7 +1,8 @@
-import axiosInstance from 'utils/axiosInstance';
-import { IApiResponse, ICreateResult } from 'utils/interface';
-import { CONSTANTS } from 'utils/constant';
 import axios from 'axios';
+
+import { IApiResponse, ICreateResult } from 'utils/types';
+import { CONSTANTS } from 'utils/constant';
+import axiosInstance from 'utils/axiosInstance';
 
 export const createResult = async (data: ICreateResult): Promise<IApiResponse> => {
     try {
