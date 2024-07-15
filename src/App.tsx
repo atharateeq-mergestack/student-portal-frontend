@@ -3,7 +3,6 @@ import Cookies from 'js-cookie';
 import ProtectedRoute from 'components/ProtectedRoute';
 import Login from 'pages/Login/Login';
 import Signup from 'pages/Signup/Signup';
-import Student from 'pages/Student';
 import Dashboard from 'pages/Dashboard/Dashboard';
 import Subject from 'pages/Subject/Subject';
 import AddResult from 'pages/AddResult/AddResult';
@@ -36,7 +35,6 @@ function App() {
         />
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/student" element={<Student />} />
           <Route path="/subject" element={<Subject />} />
           <Route path="/result/add" element={<AddResult />} />
         </Route>

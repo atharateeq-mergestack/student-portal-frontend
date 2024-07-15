@@ -23,7 +23,7 @@ function AddResult() {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
     mode: 'onBlur',
-    defaultValues: {...existingData, subjectId: existingData.subjectId._id} || {}
+    defaultValues: {...existingData, subjectId: existingData?.subjectId._id} || {}
   });
 
   useEffect(() => {
@@ -114,7 +114,7 @@ function AddResult() {
             className={errors.subjectId ? 'input-error' : ''}
             placeholder="Select a subject"
             styles={customStyles}
-            defaultValue={ {value: existingData.subjectId._id, label: existingData.subjectId.subjectName}}
+            defaultValue={ existingData && {value: existingData.subjectId._id, label: existingData.subjectId.subjectName}}
           />
           {errors.subjectId && <AiFillExclamationCircle className="error-icon" />}
           {errors.subjectId && <p>{errors.subjectId.message}</p>}

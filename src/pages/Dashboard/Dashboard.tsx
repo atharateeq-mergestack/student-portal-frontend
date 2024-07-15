@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './style.css';
 import ActionIcon from 'components/ActionIcon';
-import { IApiResponse, IResultData } from 'utils/interface';
+import { IApiResponse, IResultData, Istats, Result } from 'utils/interface';
 import { useNavigate } from 'react-router-dom';
 import { getResult, deleteResult } from 'api/result';
 import Modal from 'components/Modal/Modal';
 import showToast from 'utils/toastMessage';
+import EditIcon from 'components/EditIcon';
+import DeleteIcon from 'components/DeleteIcon';
+
+const grades = ['A+', 'A-', 'B+', 'B-', 'F'];
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -13,6 +17,8 @@ function Dashboard() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
   const [showModal, setShowModal] = useState(false);
+
+  const [stats, setStats] = useState<Istats>()
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +41,10 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         const response: IApiResponse = await getResult();
-        if (response.success) setStudents(response.data);
+        if (response.success) {
+          setStudents(response.data);
+          calculateStats(response.data);
+        }
       } catch (error: IApiResponse | any) {
         showToast(error);
       }
@@ -43,6 +52,42 @@ function Dashboard() {
 
     fetchData();
   }, []);
+
+
+  const calculateStats = (resultData: IResultData[]) => {
+    if (resultData.length === 0) return;  
+    const subjectPassCount: Result = {};
+    const subjectFailCount: Result = {};
+  
+    let highestGrade = 'F';
+    let lowestGrade = 'A+';
+  
+    resultData.forEach(data => {
+      const { subjectName } = data.subjectId;
+      const { grade } = data;
+  
+      if (!subjectPassCount[subjectName]) subjectPassCount[subjectName] = 0;
+      if (!subjectFailCount[subjectName]) subjectFailCount[subjectName] = 0;
+  
+      if (grade === 'F') {
+        subjectFailCount[subjectName]++;
+      } else {
+        subjectPassCount[subjectName]++;
+      }
+  
+      highestGrade = grades.indexOf(grade) < grades.indexOf(highestGrade) ? grade : highestGrade;
+      lowestGrade = grades.indexOf(grade) > grades.indexOf(lowestGrade) ? grade : lowestGrade;
+    });
+  
+    const highestPassCountSubject = Object.keys(subjectPassCount).reduce((a, b) => subjectPassCount[a] > subjectPassCount[b] ? a : b, '');
+    const highestFailCountSubject = Object.keys(subjectFailCount).reduce((a, b) => subjectFailCount[a] > subjectFailCount[b] ? a : b, '');
+    setStats({
+      highestGrade: highestGrade,
+      lowestGrade,
+      mostPassedSubject:  highestPassCountSubject,
+      mostFailedSubject: subjectFailCount[highestFailCountSubject] === 0 ? "--": highestFailCountSubject,
+    })
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,6 +105,14 @@ function Dashboard() {
   const handleActionClick = (student: IResultData) => {
     setSelectedStudent(student);
     setDropdownVisible(!dropdownVisible);
+    if (dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      if (dropdownRect.bottom > window.innerHeight) {
+        dropdownRef.current.style.top = `-${dropdownRect.height}px`;
+      } else {
+        dropdownRef.current.style.top = `100%`;
+      }
+    }
   };
 
   const handleEdit = () => {
@@ -80,6 +133,7 @@ function Dashboard() {
         if (response.success) {
           const updatedStudents = students.filter(student => student._id !== selectedStudent._id);
           setStudents(updatedStudents);
+          calculateStats(updatedStudents);
         } 
         showToast(response)
       } catch (error: IApiResponse | any) {
@@ -101,7 +155,6 @@ function Dashboard() {
   const handleAddSubject = () => {
     navigate('/subject');
   };
-
   return (
     <div>
       <div className="dashboard-top-container">
@@ -121,19 +174,19 @@ function Dashboard() {
         <div className="summary-section">
           <div className="summary-card summary-card-green">
             <div className="summary-title">Top Grade</div>
-            <div className="summary-value">A+</div>
+            <div className="summary-value">{stats?.highestGrade}</div>
           </div>
           <div className="summary-card summary-card-green">
             <div className="summary-title">Most Passed</div>
-            <div className="summary-value">English</div>
+            <div className="summary-value">{stats?.mostPassedSubject}</div>
           </div>
           <div className="summary-card summary-card-red">
             <div className="summary-title">Lowest Grade</div>
-            <div className="summary-value">F</div>
+            <div className="summary-value">{stats?.lowestGrade}</div>
           </div>
           <div className="summary-card summary-card-red">
             <div className="summary-title">Most Failed</div>
-            <div className="summary-value">Math</div>
+            <div className="summary-value">{stats?.mostFailedSubject}</div>
           </div>
         </div>
         <div className="table-section">
@@ -162,8 +215,14 @@ function Dashboard() {
                     <ActionIcon width="20" height="20" onClick={() => handleActionClick(student)} />
                     {dropdownVisible && selectedStudent === student && (
                       <div ref={dropdownRef} className="dropdown-menu">
-                        <div className="dropdown-item" onClick={handleEdit}>Edit</div>
-                        <div className="dropdown-item" onClick={handleDelete}>Delete</div>
+                        <div className="dropdown-item" onClick={handleEdit}>
+                          <EditIcon width="20" height="20" />
+                          <span>Edit</span>
+                        </div>
+                        <div className="dropdown-item" onClick={handleDelete}>
+                          <DeleteIcon width="20" height="20" />
+                          <span>Delete</span>
+                        </div>
                       </div>
                     )}
                   </div>

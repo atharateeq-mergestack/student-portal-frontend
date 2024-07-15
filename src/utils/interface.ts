@@ -46,3 +46,14 @@ export interface ISubject {
   updatedAt: string;
   __v: number;
 }
+
+export interface  Istats  {
+  highestGrade : string;
+  mostPassedSubject : string;
+  lowestGrade : string;
+  mostFailedSubject : string;
+}
+export interface Result {
+  [key: string]: number;
+}
+ 
