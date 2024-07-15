@@ -1,4 +1,3 @@
-// EditIcon.tsx
 import React from 'react';
 
 const EditIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
