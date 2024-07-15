@@ -19,6 +19,7 @@ export interface IApiResponse {
 }
  
 export interface IResultData {
+  _id?: string;
   studentName: string;
   marks: number;
   subjectId: { subjectName: string };
@@ -31,6 +32,7 @@ export interface ICreateSubject {
 }
 
 export interface ICreateResult {
+  _id?: string;
   studentName: string;
   subjectId: string;
   marks: number;

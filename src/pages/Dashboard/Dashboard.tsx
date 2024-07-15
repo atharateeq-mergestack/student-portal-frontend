@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './style.css';
-import DropdownMenu from './DashboardMenu/DropdownMenu';
 import ActionIcon from 'components/ActionIcon';
-import { IResultData } from 'utils/interface';
+import { IApiResponse, IResultData } from 'utils/interface';
 import { useNavigate } from 'react-router-dom';
-import { getResult } from 'api/result';
+import { getResult, deleteResult } from 'api/result';
+import Modal from 'components/Modal/Modal';
+import showToast from 'utils/toastMessage';
 
-function Dashboard () {
+function Dashboard() {
   const navigate = useNavigate();
   const [students, setStudents] = useState<IResultData[]>([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const getGradeClassName = (grade: string) => {
@@ -31,10 +34,10 @@ function Dashboard () {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getResult();
+        const response: IApiResponse = await getResult();
         if (response.success) setStudents(response.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } catch (error: IApiResponse | any) {
+        showToast(error);
       }
     };
 
@@ -60,21 +63,43 @@ function Dashboard () {
   };
 
   const handleEdit = () => {
+    if (selectedStudent) {
+      navigate('/result/add', { state: { student: selectedStudent, isUpdate: true } });
+    }
     setDropdownVisible(false);
   };
 
   const handleDelete = () => {
+    setShowModal(true); 
+  };
+
+  const confirmDelete = async () => {
+    if (selectedStudent) {
+      try {
+        const response = await deleteResult(selectedStudent._id); 
+        if (response.success) {
+          const updatedStudents = students.filter(student => student._id !== selectedStudent._id);
+          setStudents(updatedStudents);
+        } 
+        showToast(response)
+      } catch (error: IApiResponse | any) {
+        showToast(error);
+      }
+    }
+    setShowModal(false); 
     setDropdownVisible(false);
+  };
+
+  const cancelDelete = () => {
+    setShowModal(false);
   };
 
   const handleAddData = () => {
     navigate('/result/add');
-    
   };
-  
+
   const handleAddSubject = () => {
     navigate('/subject');
-
   };
 
   return (
@@ -132,23 +157,31 @@ function Dashboard () {
               </div>
               <div className="table-cell">{student.createdAt}</div>
               <div className="table-cell">
-                <div className="action-button" >
-                {
-                  <div ref={dropdownRef}>
+                <div className="action-button">
+                  <div>
                     <ActionIcon width="20" height="20" onClick={() => handleActionClick(student)} />
                     {dropdownVisible && selectedStudent === student && (
-                      <DropdownMenu onEdit={handleEdit} onDelete={handleDelete} result={student}/>
+                      <div ref={dropdownRef} className="dropdown-menu">
+                        <div className="dropdown-item" onClick={handleEdit}>Edit</div>
+                        <div className="dropdown-item" onClick={handleDelete}>Delete</div>
+                      </div>
                     )}
                   </div>
-                }
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+      {showModal && (
+        <Modal
+          message="Are you sure you want to delete this record?"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
   );
-};
+}
 
 export default Dashboard;

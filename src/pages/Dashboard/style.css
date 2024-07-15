@@ -111,9 +111,9 @@
 .table-section {
   margin-top: 20px;
   width: 100%;
-  overflow-x: auto; /* Ensure horizontal scrolling */
-  overflow-y: hidden; /* Remove vertical scrolling */
-  max-height: 100%; /* Adjust as needed */
+  overflow-x: auto; 
+  overflow-y: hidden; 
+  max-height: 100%;
 }
 
 .table-header {
@@ -125,7 +125,7 @@
 
 .table-header-item,
 .table-cell {
-  flex: 1 0 150px; /* Adjust width or flex as needed */
+  flex: 1 0 150px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -139,14 +139,14 @@
   flex-wrap: nowrap;
   padding: 10px 0;
   border-bottom: 1px solid #f7f7f7;
-  white-space: nowrap; /* Prevent wrapping */
+  white-space: nowrap;
   position: relative;
 }
 
 .grade {
   border-radius: 8px;
-  width: 110.33px; /* Adjust size as needed */
-  height: 38px; /* Adjust size as needed */
+  width: 110.33px;
+  height: 38px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,7 +169,31 @@
 }
 
 .action-button {
-  /* transform: rotate(90deg);  */
   cursor: pointer;
   position: relative;
 }
+
+.dropdown-menu {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  right: 0; 
+  top: 100%;
+  width: 120px;
+}
+
+.dropdown-item {
+  padding: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f0;
+}
+

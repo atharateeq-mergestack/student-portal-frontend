@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import { omitBy } from 'lodash';
 import Select from 'react-select';
@@ -9,36 +9,52 @@ import { resultSchema } from 'utils/validationSchema';
 import { IApiResponse, ICreateResult, ISubject } from 'utils/interface';
 import { grades } from 'utils/grades';
 import showToast from 'utils/toastMessage';
-import './style.css';
-import { createResult } from 'api/result';
+import { createResult, updateResult } from 'api/result';
 import { fetchSubjects } from 'api/subject';
+import './style.css';
 
 function AddResult() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const existingData = location.state?.student;
+  const isUpdate = location.state?.isUpdate || false;
   const [subjects, setSubjects] = useState<{ value: string, label: string }[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
     mode: 'onBlur',
+    defaultValues: {...existingData, subjectId: existingData.subjectId._id} || {}
   });
 
   useEffect(() => {
     const fetchData = async () => {
-      const subjectsResponse = await fetchSubjects();
-      const formattedSubjects = subjectsResponse.data.map((subject: ISubject) => ({
-        value: subject._id,
-        label: subject.subjectName,
-      }));
-      setSubjects(formattedSubjects);
+      try {
+        const subjectsResponse = await fetchSubjects();        
+        if (subjectsResponse.data) {
+          const formattedSubjects = subjectsResponse.data.map((subject: ISubject) => ({
+            value: subject._id,
+            label: subject.subjectName,
+          }));
+          setSubjects(formattedSubjects);
+        }
+      } catch (error: IApiResponse | any) {
+        showToast(error);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [existingData, setValue]);
 
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
     try {
       const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
-      const response: IApiResponse = await createResult(filteredData);
+      let response: IApiResponse;
+      if (isUpdate && existingData) {
+        response = await updateResult(existingData._id, filteredData);
+      } else {        
+        response = await createResult(filteredData);
+      }
+
       if (response.success) {
         showToast(response);
         navigate('/dashboard');
@@ -71,10 +87,10 @@ function AddResult() {
       padding: '10px'
     })
   };
-  
+
   return (
     <div className="result-container">
-      <h1>Add Result</h1>
+      <h1>{isUpdate ? 'Update' : 'Add'} Result</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
           <label htmlFor="studentName">Student Name</label>
@@ -98,6 +114,7 @@ function AddResult() {
             className={errors.subjectId ? 'input-error' : ''}
             placeholder="Select a subject"
             styles={customStyles}
+            defaultValue={ {value: existingData.subjectId._id, label: existingData.subjectId.subjectName}}
           />
           {errors.subjectId && <AiFillExclamationCircle className="error-icon" />}
           {errors.subjectId && <p>{errors.subjectId.message}</p>}
@@ -124,6 +141,7 @@ function AddResult() {
             className={errors.grade ? 'input-error' : ''}
             placeholder="Select a grade"
             styles={customStyles}
+            defaultValue={grades.find(grade => grade.value === existingData?.grade)}
           />
           {errors.grade && <AiFillExclamationCircle className="error-icon" />}
           {errors.grade && <p>{errors.grade.message}</p>}
@@ -131,7 +149,7 @@ function AddResult() {
         <div className="form-group">
           <div className='button-group'>
             <button type="button" onClick={() => navigate('/dashboard')}>Cancel</button>
-            <button type="submit">Add</button>
+            <button type="submit">{isUpdate ? 'Update' : 'Add'}</button>
           </div>
         </div>
       </form>
