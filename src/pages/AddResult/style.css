@@ -24,8 +24,7 @@
 }
 
 .result-container .form-group input,
-.result-container .form-group select,
-.result-container .form-group option {
+.result-container .form-group select {
   border: 1px solid #CCCCCC; 
   border-radius: 8px;
   width: 100%;
@@ -33,6 +32,35 @@
   height: 56px;
   padding: 16px;
   margin-top: 10px;
+}
+
+.react-select__control {
+  border: 1px solid #CCCCCC;
+  border-radius: 8px !important;
+  box-sizing: border-box;
+  height: 56px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.css-1u9des2-indicatorSeparator{ 
+  background-color: white;
+}
+.react-select__menu {
+  background-color: #4aaa9a;
+  color: rgb(0, 0, 0);
+}
+
+.react-select__option--is-focused {
+  background-color: #4aaa9a !important;
+}
+
+.react-select__option--is-selected {
+  background-color: #4aaa9a !important;
+}
+
+.result-container .form-group .input-error .react-select__control {
+  border-color: red !important;
 }
 
 .result-container .form-group .input-error {
@@ -57,18 +85,6 @@
   display: flex;
   justify-content: space-between;
 }
-
-/* select *{
-  background: red;
-} */
-/* option{
-  background-color:lightblue;
-  padding:8px 16px;
-  font-size:22px;
-  font-weight:1000;
-  border:0px;
-  border-radius:4px;
-  } */
 
 .result-container .form-group button {
   padding: 10px 20px;

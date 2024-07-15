@@ -1,9 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import { omitBy } from 'lodash';
-import { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { resultSchema } from 'utils/validationSchema';
 import { IApiResponse, ICreateResult, ISubject } from 'utils/interface';
 import { grades } from 'utils/grades';
@@ -14,9 +15,9 @@ import { fetchSubjects } from 'api/subject';
 
 function AddResult() {
   const navigate = useNavigate();
-  const [subjects, setSubjects] = useState<ISubject[]>([]);
+  const [subjects, setSubjects] = useState<{ value: string, label: string }[]>([]);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<ICreateResult>({
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
     mode: 'onBlur',
   });
@@ -24,14 +25,18 @@ function AddResult() {
   useEffect(() => {
     const fetchData = async () => {
       const subjectsResponse = await fetchSubjects();
-      setSubjects(subjectsResponse.data);
+      const formattedSubjects = subjectsResponse.data.map((subject: ISubject) => ({
+        value: subject._id,
+        label: subject.subjectName,
+      }));
+      setSubjects(formattedSubjects);
     };
 
     fetchData();
   }, []);
 
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
-    try {      
+    try {
       const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
       const response: IApiResponse = await createResult(filteredData);
       if (response.success) {
@@ -43,6 +48,30 @@ function AddResult() {
     }
   };
 
+  const handleSubjectChange = (selectedOption: any) => {
+    setValue('subjectId', selectedOption.value);
+  };
+
+  const handleGradeChange = (selectedOption: any) => {
+    setValue('grade', selectedOption.value);
+  };
+
+  const customStyles = {
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: '#757575',
+      fontSize: '13px',
+      padding: '10px'
+    }),
+    indicatorSeparator: () => ({}),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: '#333',
+      fontSize: '13px',
+      padding: '10px'
+    })
+  };
+  
   return (
     <div className="result-container">
       <h1>Add Result</h1>
@@ -61,12 +90,15 @@ function AddResult() {
         </div>
         <div className="form-group">
           <label htmlFor="subjectId">Subject</label>
-          <select id="subjectId" {...register('subjectId')} className={errors.subjectId ? 'input-error' : ''}>
-            <option value="">Select subject</option>
-            {subjects.map(subject => (
-              <option className="special" key={subject._id} value={subject._id}>{subject.subjectName}</option>
-            ))}
-          </select>
+          <Select
+            id="subjectId"
+            options={subjects}
+            onChange={handleSubjectChange}
+            classNamePrefix="react-select"
+            className={errors.subjectId ? 'input-error' : ''}
+            placeholder="Select a subject"
+            styles={customStyles}
+          />
           {errors.subjectId && <AiFillExclamationCircle className="error-icon" />}
           {errors.subjectId && <p>{errors.subjectId.message}</p>}
         </div>
@@ -84,12 +116,15 @@ function AddResult() {
         </div>
         <div className="form-group">
           <label htmlFor="grade">Grade</label>
-          <select id="grade" {...register('grade')} className={errors.grade ? 'input-error' : ''}>
-            <option value="">Select grade</option>
-            {grades.map(grade => (
-              <option key={grade.value} value={grade.value}>{grade.label}</option>
-            ))}
-          </select>
+          <Select
+            id="grade"
+            options={grades}
+            onChange={handleGradeChange}
+            classNamePrefix="react-select"
+            className={errors.grade ? 'input-error' : ''}
+            placeholder="Select a grade"
+            styles={customStyles}
+          />
           {errors.grade && <AiFillExclamationCircle className="error-icon" />}
           {errors.grade && <p>{errors.grade.message}</p>}
         </div>
@@ -102,6 +137,6 @@ function AddResult() {
       </form>
     </div>
   );
-};
+}
 
 export default AddResult;
