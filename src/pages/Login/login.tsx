@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Cookies from 'js-cookie';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { loginSchema } from 'utils/validationSchema';
 import { IApiResponse, ILogin } from 'utils/types';
 import { loginUser } from 'api/user';
-import { CONSTANTS } from 'utils/constant';
 import showToast from 'utils/toastMessage';
 import Input from 'components/Input';
 import 'pages/Login/style.css';
 
-function Login() {
+const Login = ()  => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<ILogin>({
     resolver: yupResolver(loginSchema),
@@ -26,11 +24,8 @@ function Login() {
   const onSubmit: SubmitHandler<ILogin> = async (data) => {
     try {
       const response: IApiResponse = await loginUser(data);
-      const token: any = response.data;
-      const expirationTime = CONSTANTS.TOKEN_EXPIRE;
-      Cookies.set('token', token, { expires: new Date(Date.now() + expirationTime) });
       if (response.success) {
-        showToast(response);
+        showToast(response.data);
         navigate('/dashboard');
       }
     } catch (error: IApiResponse | any) {

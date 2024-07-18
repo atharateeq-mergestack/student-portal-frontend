@@ -51,7 +51,7 @@ function AddResult() {
       const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
       let response: IApiResponse;
       if (isUpdate && existingData) {
-        response = await updateResult(existingData._id, filteredData);
+        response = await updateResult({...existingData, ...filteredData});
       } else {
         response = await createResult(filteredData);
       }

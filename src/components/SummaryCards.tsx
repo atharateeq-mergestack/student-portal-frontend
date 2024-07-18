@@ -1,24 +1,29 @@
-import { SummaryCardsProps } from 'utils/types';
+import React from 'react';
+import SummaryCard from 'components/SummaryCard';
+import { Istats } from 'utils/types';
 
-function SummaryCards ({ stats }:SummaryCardsProps)  {
+interface SummaryCardsProps {
+  stats: Istats | undefined;
+}
+
+const SummaryCards = ({ stats } : SummaryCardsProps) => {
+  const cardData = [
+    { title: 'Top Grade', value: stats?.highestGrade, className: 'summary-card-green' },
+    { title: 'Most Passed', value: stats?.mostPassedSubject, className: 'summary-card-green' },
+    { title: 'Lowest Grade', value: stats?.lowestGrade, className: 'summary-card-red' },
+    { title: 'Most Failed', value: stats?.mostFailedSubject, className: 'summary-card-red' }
+  ];
+
   return (
     <div className="summary-section">
-      <div className="summary-card summary-card-green">
-        <div className="summary-title">Top Grade</div>
-        <div className="summary-value">{stats?.highestGrade}</div>
-      </div>
-      <div className="summary-card summary-card-green">
-        <div className="summary-title">Most Passed</div>
-        <div className="summary-value">{stats?.mostPassedSubject}</div>
-      </div>
-      <div className="summary-card summary-card-red">
-        <div className="summary-title">Lowest Grade</div>
-        <div className="summary-value">{stats?.lowestGrade}</div>
-      </div>
-      <div className="summary-card summary-card-red">
-        <div className="summary-title">Most Failed</div>
-        <div className="summary-value">{stats?.mostFailedSubject}</div>
-      </div>
+      {cardData.map((card, index) => (
+        <SummaryCard
+          key={index}
+          title={card.title}
+          value={card.value}
+          className={card.className}
+        />
+      ))}
     </div>
   );
 };

@@ -10,7 +10,7 @@ import showToast from 'utils/toastMessage';
 import Input from 'components/Input';
 import 'pages/Signup/style.css';
 
-function Signup () {
+const Signup = ()  => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<ISignup>({
     resolver: yupResolver(signupSchema),

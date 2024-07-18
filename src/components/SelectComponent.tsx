@@ -1,17 +1,29 @@
+import { FieldError } from 'react-hook-form';
 import { AiFillExclamationCircle } from 'react-icons/ai';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 
-import { SelectProps } from 'utils/types';
+interface SelectProps {
+  id: string;
+  label: string;
+  options: { value: string; label: string }[];
+  onChange: (selectedOption: any) => void;
+  classNamePrefix?: string;
+  className?: string;
+  placeholder?: string;
+  styles?: StylesConfig;
+  defaultValue?: { value: string; label: string } | null;
+  error?: FieldError;
+}
 
-const customStyles = {
-  placeholder: (provided: any) => ({
+const customStyles: StylesConfig = {
+  placeholder: (provided) => ({
     ...provided,
     color: '#757575',
     fontSize: '13px',
     padding: '10px'
   }),
   indicatorSeparator: () => ({}),
-  singleValue: (provided: any) => ({
+  singleValue: (provided) => ({
     ...provided,
     color: '#333',
     fontSize: '13px',
@@ -19,25 +31,33 @@ const customStyles = {
   })
 };
 
-function SelectComponent ({id, label, options, onChange, classNamePrefix = 'react-select',  className, placeholder, styles = customStyles, defaultValue, error } :SelectProps) {
-  return (
-
-    <div className="form-group">
-      <label htmlFor={id}>{label}</label>
-      <Select
-        id={id}
-        options={options}
-        onChange={onChange}
-        classNamePrefix={classNamePrefix}
-        className={className}
-        placeholder={placeholder}
-        styles={styles}
-        defaultValue={defaultValue}
-      />
-      {error && <AiFillExclamationCircle className="error-icon" />}
-      {error && <p>{error.message}</p>}
-    </div>
-  );
-};
+const SelectComponent = ({
+  id,
+  label,
+  options,
+  onChange,
+  classNamePrefix = 'react-select',
+  className,
+  placeholder,
+  styles = customStyles,
+  defaultValue,
+  error
+}: SelectProps) => (
+  <div className="form-group">
+    <label htmlFor={id}>{label}</label>
+    <Select
+      id={id}
+      options={options}
+      onChange={onChange}
+      classNamePrefix={classNamePrefix}
+      className={className}
+      placeholder={placeholder}
+      styles={styles}
+      defaultValue={defaultValue}
+    />
+    {error && <AiFillExclamationCircle className="error-icon" />}
+    {error && <p>{error.message}</p>}
+  </div>
+);
 
 export default SelectComponent;

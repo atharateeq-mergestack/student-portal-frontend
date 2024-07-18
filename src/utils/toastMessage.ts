@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
-import { IApiResponse } from './types';
+import { IApiResponse } from 'utils/types';
 
 export const showToast = (toastData: IApiResponse) => {
   if (Array.isArray(toastData.message)) {
@@ -21,3 +22,4 @@ export const showToast = (toastData: IApiResponse) => {
 };
 
 export default showToast;
+ 

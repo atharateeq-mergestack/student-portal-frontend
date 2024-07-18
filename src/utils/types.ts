@@ -1,4 +1,4 @@
-import { FieldError, UseFormRegister } from "react-hook-form";
+import { FieldError } from "react-hook-form";
 import { StylesConfig } from "react-select";
 
 export interface ILogin {
@@ -73,44 +73,3 @@ export interface SelectProps {
   error?: FieldError;
 }
 
-export interface ModalProps{
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-
-export interface InputProps {
-  id: string;
-  label: string;
-  type: string;
-  placeholder: string;
-  register: UseFormRegister<any>;
-  error?: FieldError;
-  showPassword?: boolean;
-}
-
-export interface DashboardHeaderProps {
-  handleAddData: () => void;
-  handleAddSubject: () => void;
-}
-
-export interface SummaryCardsProps {
-  stats: Istats | undefined;
-}
-
-export interface TableProps {
-  students: IResultData[];
-  handleActionClick: (student: IResultData) => void;
-  dropdownVisible: boolean;
-  selectedStudent: IResultData | null;
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  handleEdit: () => void;
-  handleDelete: () => void;
-}
-
-export interface ActionMenuProps {
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  handleEdit: () => void;
-  handleDelete: () => void;
-}

@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { IApiResponse, IResultData, Istats, Result } from 'utils/types';
+import { IApiResponse, IResultData, Istats, } from 'utils/types';
 import { getResult, deleteResult } from 'api/result';
-import { CONSTANTS } from 'utils/constant';
 import Modal from 'components/Modal/Modal';
 import showToast from 'utils/toastMessage';
 import DashboardHeader from 'components/DashboardHeader';
 import SummaryCards from 'components/SummaryCards';
-import Table from 'components/Table';
+import Table from 'components/Table/Table';
 import 'pages/Dashboard/style.css';
+import { calculateStats } from 'utils/statsCalculator';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -27,7 +27,8 @@ function Dashboard() {
         const response: IApiResponse = await getResult();
         if (response.success) {
           setStudents(response.data);
-          calculateStats(response.data);
+          const calculatedStats = calculateStats(response.data);
+          setStats(calculatedStats);
         }
       } catch (error: IApiResponse | any) {
         showToast(error);
@@ -36,41 +37,6 @@ function Dashboard() {
 
     fetchData();
   }, []);
-
-  const calculateStats = (resultData: IResultData[]) => {
-    if (resultData.length === 0) return;  
-    const subjectPassCount: Result = {};
-    const subjectFailCount: Result = {};
-  
-    let highestGrade = 'F';
-    let lowestGrade = 'A+';
-  
-    resultData.forEach(data => {
-      const { subjectName } = data.subjectId;
-      const { grade } = data;
-  
-      if (!subjectPassCount[subjectName]) subjectPassCount[subjectName] = 0;
-      if (!subjectFailCount[subjectName]) subjectFailCount[subjectName] = 0;
-  
-      if (grade === 'F') {
-        subjectFailCount[subjectName]++;
-      } else {
-        subjectPassCount[subjectName]++;
-      }
-  
-      highestGrade = CONSTANTS.GRADES.indexOf(grade) < CONSTANTS.GRADES.indexOf(highestGrade) ? grade : highestGrade;
-      lowestGrade = CONSTANTS.GRADES.indexOf(grade) > CONSTANTS.GRADES.indexOf(lowestGrade) ? grade : lowestGrade;
-    });
-  
-    const highestPassCountSubject = Object.keys(subjectPassCount).reduce((a, b) => subjectPassCount[a] > subjectPassCount[b] ? a : b, '');
-    const highestFailCountSubject = Object.keys(subjectFailCount).reduce((a, b) => subjectFailCount[a] > subjectFailCount[b] ? a : b, '');
-    setStats({
-      highestGrade: highestGrade,
-      lowestGrade,
-      mostPassedSubject:  highestPassCountSubject,
-      mostFailedSubject: subjectFailCount[highestFailCountSubject] === 0 ? "--": highestFailCountSubject,
-    });
-  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -112,7 +78,7 @@ function Dashboard() {
   const confirmDelete = async () => {
     if (selectedStudent) {
       try {
-        const response = await deleteResult(selectedStudent._id); 
+        const response = await deleteResult(selectedStudent); 
         if (response.success) {
           const updatedStudents = students.filter(student => student._id !== selectedStudent._id);
           setStudents(updatedStudents);
