@@ -1,8 +1,7 @@
-import axios from 'axios';
-
-import { IApiResponse, ICreateResult } from 'utils/types';
+import { IApiResponse, ICreateResult, IResultData } from 'utils/types';
 import { CONSTANTS } from 'utils/constant';
 import axiosInstance from 'utils/axiosInstance';
+import handleAxiosError from 'utils/handleAxiosError';
 
 export const createResult = async (data: ICreateResult): Promise<IApiResponse> => {
     try {
@@ -12,11 +11,7 @@ export const createResult = async (data: ICreateResult): Promise<IApiResponse> =
         );
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw error.response?.data ?? new Error('Network Error');
-        } else {
-            throw new Error('Network Error');
-        }
+        return handleAxiosError(error);
     }
 };
 
@@ -25,41 +20,29 @@ export const getResult = async (): Promise<IApiResponse> => {
         const response = await axiosInstance.get<IApiResponse>(`${CONSTANTS.BASE_URL}${CONSTANTS.ENDPOINTS.GET_RESULT}`);
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw error.response?.data ?? new Error('Network Error');
-        } else {
-            throw new Error('Network Error');
-        }
+       return handleAxiosError(error);
     }
 };
 
-export const updateResult = async (id : string = '', data: ICreateResult): Promise<IApiResponse> => {
+export const updateResult = async (data: IResultData): Promise<IApiResponse> => {
     try {
         const response = await axiosInstance.put<IApiResponse>(
-            `${CONSTANTS.ENDPOINTS.RESULT}/${id}`, 
+            `${CONSTANTS.ENDPOINTS.RESULT}/${data._id}`, 
             data
         );
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw error.response?.data ?? new Error('Network Error');
-        } else {
-            throw new Error('Network Error');
-        }
+       return handleAxiosError(error);
     }
 };
 
-export const deleteResult = async (id : string = ''): Promise<IApiResponse> => {
+export const deleteResult = async (data: IResultData): Promise<IApiResponse> => {
     try {
         const response = await axiosInstance.delete<IApiResponse>(
-            `${CONSTANTS.ENDPOINTS.RESULT}/${id}`, 
+            `${CONSTANTS.ENDPOINTS.RESULT}/${data._id}`, 
         );
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            throw error.response?.data ?? new Error('Network Error');
-        } else {
-            throw new Error('Network Error');
-        }
+       return handleAxiosError(error);
     }
 };
