@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { omitBy } from 'lodash';
 
 import { resultSchema } from 'utils/validationSchema';
-import { IApiResponse, ICreateResult, ISubject } from 'utils/types';
+import { IApiResponse, ICreateResult, IResultData, ISubject } from 'utils/types';
 import { grades } from 'utils/grades';
 import { createResult, updateResult } from 'api/result';
 import { fetchSubjects } from 'api/subject';
@@ -17,8 +17,8 @@ import 'pages/AddResult/style.css';
 function AddResult() {
   const navigate = useNavigate();
   const location = useLocation();
-  const existingData = location.state?.student;
-  const isUpdate = location.state?.isUpdate || false;
+  const existingData : IResultData = location.state?.student;
+  const isUpdate : boolean = location.state?.isUpdate || false;
   const [subjects, setSubjects] = useState<{ value: string; label: string }[]>([]);
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
