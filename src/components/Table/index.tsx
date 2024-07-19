@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { IResultData } from 'utils/types';
 import TableRow from 'components/Table/TableRow';
 import TableHeader from 'components/Table/TableHeader';
+import NoRecord from 'components/NoRecord';
 
 interface TableProps {
   students: IResultData[];
@@ -45,7 +46,10 @@ const Table = ({ students, dropdownVisible, setDropdownVisible, selectedStudent,
   return (
     <div className="table-section">
       <TableHeader />
-      {students.map((student, index) => (
+      {students.length === 0 ? (
+        <NoRecord />
+      ):(
+      students.map((student, index) => (
         <TableRow
           key={index}
           student={student}
@@ -56,7 +60,8 @@ const Table = ({ students, dropdownVisible, setDropdownVisible, selectedStudent,
           handleEdit={handleEdit}
           handleDelete={handleDelete}
         />
-      ))}
+      ))
+    )}
     </div>
   );
 }
