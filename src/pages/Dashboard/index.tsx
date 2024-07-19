@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { IApiResponse, IResultData, Istats, } from 'utils/types';
-import { getResult, deleteResult } from 'api/result';
+import { getResult } from 'api/result';
 import Modal from 'components/Modal/Modal';
 import showToast from 'utils/toastMessage';
 import DashboardHeader from 'components/DashboardHeader';
@@ -12,7 +11,6 @@ import 'pages/Dashboard/style.css';
 import { calculateStats } from 'utils/statsCalculator';
 
 function Dashboard() {
-  const navigate = useNavigate();
   const [students, setStudents] = useState<IResultData[]>([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
@@ -51,59 +49,6 @@ function Dashboard() {
     };
   }, []);
 
-  const handleActionClick = (student: IResultData) => {
-    setSelectedStudent(student);
-    setDropdownVisible(!dropdownVisible);
-    if (dropdownRef.current) {
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      if (dropdownRect.bottom > window.innerHeight) {
-        dropdownRef.current.style.top = `-${dropdownRect.height}px`;
-      } else {
-        dropdownRef.current.style.top = `100%`;
-      }
-    }
-  };
-
-  const handleEdit = () => {
-    if (selectedStudent) {
-      navigate('/result/add', { state: { student: selectedStudent, isUpdate: true } });
-    }
-    setDropdownVisible(false);
-  };
-
-  const handleDelete = () => {
-    setShowModal(true); 
-  };
-
-  const confirmDelete = async () => {
-    if (selectedStudent) {
-      try {
-        const response = await deleteResult(selectedStudent); 
-        if (response.success) {
-          const updatedStudents = students.filter(student => student._id !== selectedStudent._id);
-          setStudents(updatedStudents);
-          calculateStats(updatedStudents);
-        } 
-        showToast(response);
-      } catch (error: IApiResponse | any) {
-        showToast(error);
-      }
-    }
-    setShowModal(false); 
-    setDropdownVisible(false);
-  };
-
-  const cancelDelete = () => {
-    setShowModal(false);
-  };
-
-  const handleAddData = () => {
-    navigate('/result/add');
-  };
-
-  const handleAddSubject = () => {
-    navigate('/subject');
-  };
 
   return (
     <div>
@@ -112,23 +57,27 @@ function Dashboard() {
       </div>
       <hr className='bar-line'/>
       <div className="dashboard-container">
-        <DashboardHeader handleAddData={handleAddData} handleAddSubject={handleAddSubject} />
+        <DashboardHeader />
         <SummaryCards stats={stats} />
         <Table
           students={students}
-          handleActionClick={handleActionClick}
           dropdownVisible={dropdownVisible}
+          setDropdownVisible={setDropdownVisible}
           selectedStudent={selectedStudent}
+          setSelectedStudent={setSelectedStudent}
           dropdownRef={dropdownRef}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
+          setShowModal={setShowModal}
         />
       </div>
       {showModal && (
         <Modal
           message="Are you sure you want to delete this record?"
-          onConfirm={confirmDelete}
-          onCancel={cancelDelete}
+          students={students}
+          setStats={setStats}
+          selectedStudent={selectedStudent}
+          setStudents={setStudents}
+          setDropdownVisible={setDropdownVisible}
+          setShowModal={setShowModal}
         />
       )}
     </div>
