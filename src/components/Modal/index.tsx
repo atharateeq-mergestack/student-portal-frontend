@@ -1,13 +1,12 @@
 import { useDispatch } from 'react-redux';
 
-import { IResultData, Istats } from 'utils/types';
+import { IResultData } from 'utils/types';
 import { deleteResultRequest } from 'reduxStore/actions/resultActions';
 import 'components/Modal/style.css'; 
 
 interface ModalProps{
   message: string;
   selectedStudent: IResultData | null;
-  setStats: React.Dispatch<React.SetStateAction<Istats | undefined>>;
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }

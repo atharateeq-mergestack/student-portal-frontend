@@ -1,64 +1,34 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import  { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { IResultData } from 'utils/types';
 import TableRow from 'components/Table/TableRow';
 import TableHeader from 'components/Table/TableHeader';
 import NoRecord from 'components/NoRecord';
+import { RootState } from 'store';
+import { fetchResultsRequest } from 'reduxStore/actions/resultActions';
 
-interface TableProps {
-  students: IResultData[];
-  dropdownVisible: boolean;
-  setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedStudent: IResultData | null;
-  setSelectedStudent: React.Dispatch<React.SetStateAction<IResultData | null>>;
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const Table = ({ students, dropdownVisible, setDropdownVisible, selectedStudent, setSelectedStudent, dropdownRef, setShowModal }: TableProps) => {
-  const navigate = useNavigate();
+const Table = () => {
+  const dispatch = useDispatch();
+ 
+  const { results, fetched } = useSelector((state : RootState) => state.results);
 
-  const handleActionClick = (student: IResultData) => {
-    setSelectedStudent(student);
-    setDropdownVisible(!dropdownVisible);
-    if (dropdownRef.current) {
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      if (dropdownRect.bottom > window.innerHeight) {
-        dropdownRef.current.style.top = `-${dropdownRect.height}px`;
-      } else {
-        dropdownRef.current.style.top = `100%`;
-      }
-    }
-  };
+  useEffect(() => {  
+    if(!fetched)  
+      dispatch(fetchResultsRequest());
+  }, [dispatch, fetched]);
 
-  const handleEdit = () => {
-    if (selectedStudent) {
-      navigate('/result/add', { state: { student: selectedStudent, isUpdate: true } });
-    }
-    setDropdownVisible(false);
-  };
-
-  const handleDelete = () => {
-    setShowModal(true);
-  };
 
   return (
     <div className="table-section">
       <TableHeader />
-      {students.length === 0 ? (
+      {results.length === 0 ? (
         <NoRecord />
       ):(
-      students.map((student, index) => (
+        results.map((results, index) => (
         <TableRow
           key={index}
-          student={student}
-          handleActionClick={handleActionClick}
-          dropdownVisible={dropdownVisible}
-          selectedStudent={selectedStudent}
-          dropdownRef={dropdownRef}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
+          student={results}
         />
       ))
     )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import ActionIcon from 'components/Icons/ActionIcon';
 import ActionMenu from 'components/ActionMenu';
@@ -8,36 +8,54 @@ import DateTimeDisplay from 'components/DateTimeDisplay';
 
 type TableRowProps = {
   student: IResultData;
-  handleActionClick: (student: IResultData) => void;
-  dropdownVisible: boolean;
-  selectedStudent: IResultData | null;
-  dropdownRef: React.RefObject<HTMLDivElement>;
-  handleEdit: () => void;
-  handleDelete: () => void;
 };
 
-const TableRow = ({
-  student,
-  handleActionClick,
-  dropdownVisible,
-  selectedStudent,
-  dropdownRef,
-  handleEdit,
-  handleDelete
-} : TableRowProps) => {
+const TableRow = ({ student,} : TableRowProps) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+  }, []);
+
+  const handleActionClick = (student: IResultData) => {
+    setSelectedStudent(student);
+    setDropdownVisible(!dropdownVisible);
+    if (dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      if (dropdownRect.bottom > window.innerHeight) {
+        dropdownRef.current.style.top = `-${dropdownRect.height}px`;
+      } else {
+        dropdownRef.current.style.top = `100%`;
+      }
+    }
+  };
+
   return (
     <div className="table-row">
       <div className="table-cell">{student.studentName}</div>
       <div className="table-cell">{student.marks}</div>
       <div className="table-cell">{student.subjectId.subjectName}</div>
+
       <div className="table-cell">
         <div className={`grade ${getGradeClassName(student.grade)}`}>
           {student.grade}
         </div>
       </div>
+
       <div className="table-cell">
         <DateTimeDisplay date={student.createdAt}/>
       </div>
+
       <div className="table-cell">
         <div className="action-button">
           <div>
@@ -45,8 +63,10 @@ const TableRow = ({
             {dropdownVisible && selectedStudent === student && (
               <ActionMenu
                 dropdownRef={dropdownRef}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
+                setShowModal={setShowModal}
+                setDropdownVisible={setDropdownVisible}
+                selectedStudent={selectedStudent}
+                showModal={showModal}
               />
             )}
           </div>

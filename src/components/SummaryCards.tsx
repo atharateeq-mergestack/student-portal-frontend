@@ -1,17 +1,22 @@
+import { useDispatch, useSelector } from 'react-redux';
+
+import { RootState } from 'store';
+import { useEffect } from 'react';
+import { fetchResultsRequest } from 'reduxStore/actions/resultActions';
 import SummaryCard from 'components/SummaryCard';
-import { Istats } from 'utils/types';
+import { generateCardData } from 'utils/cardData';
 
-interface SummaryCardsProps {
-  stats: Istats | undefined;
-}
+const SummaryCards = () => {
+  const dispatch = useDispatch();
 
-const SummaryCards = ({ stats } : SummaryCardsProps) => {
-  const cardData = [
-    { title: 'Top Grade', value: stats?.highestGrade|| '--', className: 'summary-card-green' },
-    { title: 'Most Passed', value: stats?.mostPassedSubject|| '--', className: 'summary-card-green' },
-    { title: 'Lowest Grade', value: stats?.lowestGrade|| '--', className: 'summary-card-red' },
-    { title: 'Most Failed', value: stats?.mostFailedSubject|| '--', className: 'summary-card-red' }
-  ];
+  const { stats, fetched } = useSelector((state : RootState) => state.results);
+
+  useEffect(() => {  
+    if(!fetched)  
+      dispatch(fetchResultsRequest());
+  }, [dispatch, fetched]);
+
+  const cardData = generateCardData(stats);
 
   return (
     <div className="summary-section">
