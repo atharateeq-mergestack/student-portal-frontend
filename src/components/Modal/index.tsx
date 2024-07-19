@@ -6,14 +6,13 @@ import 'components/Modal/style.css';
 
 interface ModalProps{
   message: string;
-  students: IResultData[];
   selectedStudent: IResultData | null;
   setStats: React.Dispatch<React.SetStateAction<Istats | undefined>>;
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Modal = ({ message, students, selectedStudent, setDropdownVisible, setShowModal } : ModalProps) => {
+const Modal = ({ message, selectedStudent, setDropdownVisible, setShowModal } : ModalProps) => {
   const dispatch = useDispatch();
 
   const confirmDelete = () => {

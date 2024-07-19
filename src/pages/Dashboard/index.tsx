@@ -5,10 +5,10 @@ import { IResultData, Istats, } from 'utils/types';
 import { RootState } from 'store';
 import { calculateStats } from 'utils/statsCalculator';
 import { fetchResultsRequest } from 'reduxStore/actions/resultActions';
-import Modal from 'components/Modal/Modal';
+import Modal from 'components/Modal';
 import DashboardHeader from 'components/DashboardHeader';
 import SummaryCards from 'components/SummaryCards';
-import Table from 'components/Table/Table';
+import Table from 'components/Table';
 import 'pages/Dashboard/style.css';
 
 function Dashboard() {
@@ -67,7 +67,6 @@ function Dashboard() {
       {showModal && (
         <Modal
           message="Are you sure you want to delete this record?"
-          students={results}
           setStats={setStats}
           selectedStudent={selectedStudent}
           setDropdownVisible={setDropdownVisible}
