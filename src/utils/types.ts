@@ -25,7 +25,7 @@ export interface IResultData {
   _id?: string;
   studentName: string;
   marks: number;
-  subjectId: { subjectName: string };
+  subjectId: { _id: string ; subjectName: string };
   grade: string;
   createdAt: string;
 }

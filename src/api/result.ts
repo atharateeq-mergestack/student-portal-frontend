@@ -24,7 +24,7 @@ export const getResult = async (): Promise<IApiResponse> => {
     }
 };
 
-export const updateResult = async (data: IResultData): Promise<IApiResponse> => {
+export const updateResult = async (data: ICreateResult): Promise<IApiResponse> => {
     try {
         const response = await axiosInstance.put<IApiResponse>(
             `${CONSTANTS.ENDPOINTS.RESULT}/${data._id}`, 

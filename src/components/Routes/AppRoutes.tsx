@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import Dashboard from 'pages/Dashboard/Dashboard';
-import Subject from 'pages/Subject/Subject';
-import AddResult from 'pages/AddResult/AddResult';
+import Dashboard from 'pages/Dashboard';
+import Subject from 'pages/Subject';
+import AddResult from 'pages/AddResult';
 import { isAuthenticated } from 'utils/auth';
-import Login from 'pages/Login/login';
-import Signup from 'pages/Signup/signup';
+import Login from 'pages/Login';
+import Signup from 'pages/Signup';
 import ProtectedRoute from 'components/Routes/ProtectedRoute';
 
 const AppRoutes = () => {
