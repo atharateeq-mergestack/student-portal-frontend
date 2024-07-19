@@ -4,6 +4,7 @@ import ActionIcon from 'components/Icons/ActionIcon';
 import ActionMenu from 'components/ActionMenu';
 import { getGradeClassName } from 'utils/grades';
 import { IResultData } from 'utils/types';
+import DateTimeDisplay from 'components/DateTimeDisplay';
 
 type TableRowProps = {
   student: IResultData;
@@ -34,7 +35,9 @@ const TableRow = ({
           {student.grade}
         </div>
       </div>
-      <div className="table-cell">{student.createdAt}</div>
+      <div className="table-cell">
+        <DateTimeDisplay date={student.createdAt}/>
+      </div>
       <div className="table-cell">
         <div className="action-button">
           <div>
