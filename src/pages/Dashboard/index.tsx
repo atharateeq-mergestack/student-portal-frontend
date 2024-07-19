@@ -1,40 +1,36 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { IApiResponse, IResultData, Istats, } from 'utils/types';
-import { getResult } from 'api/result';
+import { IResultData, Istats, } from 'utils/types';
+import { RootState } from 'store';
+import { calculateStats } from 'utils/statsCalculator';
+import { fetchResultsRequest } from 'reduxStore/actions/resultActions';
 import Modal from 'components/Modal/Modal';
-import showToast from 'utils/toastMessage';
 import DashboardHeader from 'components/DashboardHeader';
 import SummaryCards from 'components/SummaryCards';
 import Table from 'components/Table/Table';
 import 'pages/Dashboard/style.css';
-import { calculateStats } from 'utils/statsCalculator';
 
 function Dashboard() {
-  const [students, setStudents] = useState<IResultData[]>([]);
+  const dispatch = useDispatch();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [stats, setStats] = useState<Istats | undefined>(undefined);
+  const { results, fetched} = useSelector((state : RootState) => state.results);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: IApiResponse = await getResult();
-        if (response.success) {
-          setStudents(response.data);
-          const calculatedStats = calculateStats(response.data);
-          setStats(calculatedStats);
-        }
-      } catch (error: IApiResponse | any) {
-        showToast(error);
-      }
-    };
+  useEffect(() => {  
+    if(!fetched)  
+      dispatch(fetchResultsRequest());
+  }, [dispatch, fetched]);
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    if (results.length) {
+      setStats(calculateStats(results));
+    }
+  }, [results]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,7 +45,6 @@ function Dashboard() {
     };
   }, []);
 
-
   return (
     <div>
       <div className="dashboard-top-container">
@@ -60,7 +55,7 @@ function Dashboard() {
         <DashboardHeader />
         <SummaryCards stats={stats} />
         <Table
-          students={students}
+          students={results}
           dropdownVisible={dropdownVisible}
           setDropdownVisible={setDropdownVisible}
           selectedStudent={selectedStudent}
@@ -72,10 +67,9 @@ function Dashboard() {
       {showModal && (
         <Modal
           message="Are you sure you want to delete this record?"
-          students={students}
+          students={results}
           setStats={setStats}
           selectedStudent={selectedStudent}
-          setStudents={setStudents}
           setDropdownVisible={setDropdownVisible}
           setShowModal={setShowModal}
         />

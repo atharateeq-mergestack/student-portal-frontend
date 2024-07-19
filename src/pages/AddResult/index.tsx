@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { omitBy } from 'lodash';
+import { useDispatch,  useSelector } from 'react-redux';
 
 import { resultSchema } from 'utils/validationSchema';
-import { IApiResponse, ICreateResult, IResultData, ISubject } from 'utils/types';
+import { ICreateResult, IResultData } from 'utils/types';
 import { grades } from 'utils/grades';
-import { createResult, updateResult } from 'api/result';
-import { fetchSubjects } from 'api/subject';
+import { RootState } from 'store';
+import { fetchSubjectsRequest } from 'reduxStore/actions/subjectActions';
+import { createResultRequest, updateResultRequest } from 'reduxStore/actions/resultActions';
 import SelectComponent from 'components/SelectComponent';
-import showToast from 'utils/toastMessage';
 import Input from 'components/Input';
 import 'pages/AddResult/style.css';
 
 function AddResult() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const existingData : IResultData = location.state?.student;
   const isUpdate : boolean = location.state?.isUpdate || false;
-  const [subjects, setSubjects] = useState<{ value: string; label: string }[]>([]);
+  const { subjects, fetched} = useSelector((state : RootState) => state.subjects);
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
@@ -27,42 +29,20 @@ function AddResult() {
     defaultValues: { ...existingData, subjectId: existingData?.subjectId._id } || {}
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const subjectsResponse = await fetchSubjects();
-        if (subjectsResponse.data) {
-          const formattedSubjects = subjectsResponse.data.map((subject: ISubject) => ({
-            value: subject._id,
-            label: subject.subjectName,
-          }));
-          setSubjects(formattedSubjects);
-        }
-      } catch (error: IApiResponse | any) {
-        showToast(error);
-      }
-    };
-
-    fetchData();
-  }, [existingData, setValue]);
+  useEffect(() => {  
+    if(!fetched)  {
+      dispatch(fetchSubjectsRequest());
+    }
+  }, [dispatch, fetched, subjects]);
 
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
-    try {
-      const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
-      let response: IApiResponse;
-      if (isUpdate && existingData) {
-        response = await updateResult({...existingData, ...filteredData});
-      } else {
-        response = await createResult(filteredData);
-      }
-
-      if (response.success) {
-        showToast(response);
-        navigate('/dashboard');
-      }
-    } catch (error: IApiResponse | any) {
-      showToast(error);
+    const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
+    if (isUpdate && existingData) {
+      dispatch(updateResultRequest({ ...existingData, ...filteredData }));
+    } else {
+      dispatch(createResultRequest(filteredData));
     }
+    navigate('/dashboard');
   };
 
   const handleSubjectChange = (selectedOption: any) => {
