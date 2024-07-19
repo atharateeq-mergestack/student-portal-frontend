@@ -1,0 +1,117 @@
+.subject-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    max-width: 564px;
+    margin: 0 auto;
+  }
+  
+  .subject-container h1 {
+    margin-bottom: 20px;
+  }
+  
+  .subject-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .subject-container .form-group {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .subject-container  .show-password-label{
+    font-size: 12px;
+    line-height: 18px;
+    color: #666666;
+    margin-bottom: 10px;
+  }
+
+  .subject-container  .show-password-lable label{
+    font-size: 12px;
+    line-height: 18px;
+    color: #666666;
+  }
+
+  .show-password-lable input{
+    height: 10px;
+  }
+  
+  .subject-container .form-group input {
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 56px;
+    padding: 16px;
+    margin-top: 10px;
+  }
+  
+  .subject-container .form-group .input-error {
+    border-color: red;
+  }
+  
+  .subject-container .form-group p {
+    color: #EB5757;
+    font-size: 12px;
+    margin: 5px 0 0 0;
+  }
+  
+  .subject-container .form-group .error-icon {
+    position: absolute;
+    right: 2%;
+    top: 55%;
+    transform: translateY(-50%);
+    color: #EB5757;
+  }
+
+  .subject-container .form-group .password-input {
+    position: relative;
+  }
+
+  .subject-container .form-group input  {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 40px;
+  }
+  .button-group{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .subject-container .form-group button {
+    padding: 10px 20px;
+    border: #343744 1px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 20%;
+    background-color: #FFFFFF;
+    color: #343744;
+  }
+
+  .subject-container .form-group button[type="submit"]  {
+  background-color: #4aaa9a;
+  color: white;
+}
+  
+  @media (max-width: 600px) {
+    .subject-container {
+      padding: 10px;
+    }
+  
+    .subject-container h1 {
+      font-size: 24px;
+    }
+  
+    .subject-container .form-group button[type="submit"] {
+      font-size: 14px;
+    }
+  }
+  
