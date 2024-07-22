@@ -30,14 +30,6 @@ const TableRow = ({ student,} : TableRowProps) => {
   const handleActionClick = (student: IResultData) => {
     setSelectedStudent(student);
     setDropdownVisible(!dropdownVisible);
-    if (dropdownRef.current) {
-      const dropdownRect = dropdownRef.current.getBoundingClientRect();
-      if (dropdownRect.bottom > window.innerHeight) {
-        dropdownRef.current.style.top = `-${dropdownRect.height}px`;
-      } else {
-        dropdownRef.current.style.top = `100%`;
-      }
-    }
   };
 
   return (
