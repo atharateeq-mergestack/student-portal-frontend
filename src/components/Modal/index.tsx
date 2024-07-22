@@ -1,7 +1,7 @@
 import { IResultData } from 'utils/types';
 import 'components/Modal/style.css'; 
 
-interface ModalProps{
+interface IModalProps{
   message: string;
   selectedStudent: IResultData | null;
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,7 +9,7 @@ interface ModalProps{
   deleteResult: (data: IResultData)  => void
 }
 
-const Modal = ({ message, selectedStudent, setDropdownVisible, setShowModal, deleteResult } : ModalProps) => {
+const Modal = ({ message, selectedStudent, setDropdownVisible, setShowModal, deleteResult } : IModalProps) => {
   const confirmDelete = () => {
     if (selectedStudent) {
       deleteResult(selectedStudent)

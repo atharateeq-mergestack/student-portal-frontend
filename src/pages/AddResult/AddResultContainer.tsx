@@ -6,8 +6,8 @@ import { RootState } from 'store';
 import AddResult from 'pages/AddResult';
 import { ICreateResult } from 'utils/types';
 import { selectSubjectDropDown } from 'selectors/SubjectSelector';
-import { fetchSubjectsAction } from 'store/actions/subjectActions';
-import { createResultAction, updateResultAction } from 'store/actions/resultActions';
+import { fetchSubjectsAction } from 'store/actions/subject';
+import { createResultAction, updateResultAction } from 'store/actions/result';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.subjects.loading,

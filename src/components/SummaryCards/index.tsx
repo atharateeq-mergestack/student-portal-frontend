@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 
 import SummaryCard from 'components/SummaryCards/SummaryCard';
-import { SummaryCardProps } from 'utils/types';
+import { ISummaryCardProps } from 'utils/types';
 
 interface ISummaryCardsProps {
-  cardData: SummaryCardProps[];
+  cardData: ISummaryCardProps[];
   fetched: boolean;
   fetchResults: () => void;
 }

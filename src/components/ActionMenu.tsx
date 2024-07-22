@@ -5,7 +5,7 @@ import DeleteIcon from 'components/Icons/DeleteIcon';
 import ModalContainer from 'components/Modal/ModalContainer';
 import { IResultData } from 'utils/types';
 
-interface ActionMenuProps {
+interface IActionMenuProps {
   dropdownRef: React.RefObject<HTMLDivElement>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,7 +13,7 @@ interface ActionMenuProps {
   showModal: boolean;
 }
 
-const ActionMenu = ({ dropdownRef, setShowModal, setDropdownVisible, selectedStudent, showModal }: ActionMenuProps) => {
+const ActionMenu = ({ dropdownRef, setShowModal, setDropdownVisible, selectedStudent, showModal }: IActionMenuProps) => {
   const navigate = useNavigate() 
 
   const handleEdit = () => {

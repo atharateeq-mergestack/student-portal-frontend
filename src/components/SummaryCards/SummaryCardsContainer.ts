@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store';
 import SummaryCards from 'components/SummaryCards';
 import { selectCardData } from 'selectors/ResultSelector';
-import { fetchResultsAction } from 'store/actions/resultActions';
+import { fetchResultsAction } from 'store/actions/result';
 
 const mapStateToProps = (state: RootState) => {
   const { fetched } = state.results

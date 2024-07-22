@@ -78,7 +78,7 @@ export interface ISubjectsDropDown{
   label: string 
 }
 
-export interface SummaryCardProps {
+export interface ISummaryCardProps {
   title: string;
   value: string | number | undefined;
   className: string;

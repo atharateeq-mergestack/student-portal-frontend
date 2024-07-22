@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import { RootState } from 'store';
 import Table from 'components/Table';
-import { fetchResultsAction } from 'store/actions/resultActions';
+import { fetchResultsAction } from 'store/actions/result';
 
 const mapStateToProps = (state: RootState) => {
   return {

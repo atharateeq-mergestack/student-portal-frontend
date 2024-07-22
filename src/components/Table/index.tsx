@@ -3,11 +3,11 @@ import TableHeader from 'components/Table/TableHeader';
 import NoRecord from 'components/NoRecord';
 import { IResultData } from 'utils/types';
 
-interface TableProps{
+interface ITableProps{
   results: IResultData[]
 }
 
-const Table = ({ results }: TableProps) => {
+const Table = ({ results }: ITableProps) => {
   return (
     <div className="table-section">
       <TableHeader />

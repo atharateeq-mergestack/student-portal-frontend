@@ -6,11 +6,11 @@ import { getGradeClassName } from 'utils/grades';
 import { IResultData } from 'utils/types';
 import DateTimeDisplay from 'components/DateTimeDisplay';
 
-type TableRowProps = {
+type ITableRowProps = {
   student: IResultData;
 };
 
-const TableRow = ({ student,} : TableRowProps) => {
+const TableRow = ({ student,} : ITableRowProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);

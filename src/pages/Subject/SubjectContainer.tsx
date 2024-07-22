@@ -5,7 +5,7 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import Subject from 'pages/Subject';
 import { ICreateSubject } from 'utils/types';
-import { createSubjectAction } from 'store/actions/subjectActions';
+import { createSubjectAction } from 'store/actions/subject';
 
 const mapStateToProps = (state: RootState) => ({
   loading: state.subjects.loading,

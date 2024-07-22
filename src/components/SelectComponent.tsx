@@ -2,7 +2,7 @@ import { FieldError } from 'react-hook-form';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import Select, { StylesConfig } from 'react-select';
 
-interface SelectProps {
+interface ISelectProps {
   id: string;
   label: string;
   options: { value: string; label: string }[];
@@ -42,7 +42,7 @@ const SelectComponent = ({
   styles = customStyles,
   defaultValue,
   error
-}: SelectProps) => (
+}: ISelectProps) => (
   <div className="form-group">
     <label htmlFor={id}>{label}</label>
     <Select

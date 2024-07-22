@@ -5,7 +5,7 @@ import { AnyAction } from 'redux';
 import { RootState } from 'store';
 import Modal from 'components/Modal';
 import { IResultData } from 'utils/types';
-import { deleteResultAction } from 'store/actions/resultActions';
+import { deleteResultAction } from 'store/actions/result';
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
   deleteResult: (data: IResultData) => {dispatch(deleteResultAction(data))},

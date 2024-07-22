@@ -1,6 +1,6 @@
 import { SummaryCardProps } from "utils/types";
 
-const SummaryCard = ({ title, value, className } : SummaryCardProps) => {
+const SummaryCard = ({ title, value, className } : ISummaryCardProps) => {
   return (
     <div className={`summary-card ${className}`}>
       <div className="summary-title">{title}</div>

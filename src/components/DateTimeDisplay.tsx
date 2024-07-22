@@ -1,10 +1,10 @@
 import { formatDateTime } from 'utils/dateFormatter';
 
-interface DateTimeDisplayProps {
+interface IDateTimeDisplayProps {
   date: string;
 };
 
-const DateTimeDisplay = ({ date } : DateTimeDisplayProps) => {
+const DateTimeDisplay = ({ date } : IDateTimeDisplayProps) => {
   const { formattedDate, formattedTime } = formatDateTime(date);
 
   return (
