@@ -1,5 +1,6 @@
 import 'components/NoRecord/style.css'
-function NoRecord (){
+
+const NoRecord = () => {
   return (
     <div className="no-record-found">
       <p>No records found.</p>
