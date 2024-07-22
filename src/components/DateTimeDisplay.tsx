@@ -1,11 +1,11 @@
-import { formatDateTime } from 'utils/dateFormatter';
+import { formatDateTime_MonthDayYear_HourMinute_AMPM } from 'utils/dateFormatter';
 
 interface IDateTimeDisplayProps {
   date: string;
 };
 
 const DateTimeDisplay = ({ date } : IDateTimeDisplayProps) => {
-  const { formattedDate, formattedTime } = formatDateTime(date);
+  const { formattedDate, formattedTime } = formatDateTime_MonthDayYear_HourMinute_AMPM(date);
 
   return (
     <div>
