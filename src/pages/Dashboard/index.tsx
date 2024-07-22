@@ -1,6 +1,6 @@
 import DashboardHeader from 'components/DashboardHeader';
-import SummaryCards from 'components/SummaryCards';
-import Table from 'components/Table';
+import SummaryCardsContainer from 'components/SummaryCards/SummaryCardsContainer';
+import TableContainer from 'components/Table/TableContainer';
 import 'pages/Dashboard/style.css';
 
 function Dashboard() {
@@ -13,8 +13,8 @@ function Dashboard() {
       <hr className='bar-line'/>
       <div className="dashboard-container">
         <DashboardHeader />
-        <SummaryCards />
-        <Table />
+        <SummaryCardsContainer />
+        <TableContainer />
       </div>
     </div>
   );

@@ -6,11 +6,11 @@ import {
   CREATE_SUBJECT_SUCCESS,
   CREATE_SUBJECT_FAILURE,
   SubjectAction,
-} from 'reduxStore/actions/actionTypes';
+} from 'store/actions/actionTypes';
 import { ISubject } from 'utils/types';
 
 interface SubjectState {
-  subjects: { value: string; label: string }[];
+  subjects: ISubject[];
   loading: boolean;
   error: string | null;
   fetched: boolean;
@@ -32,10 +32,7 @@ export const subjectReducer = (state = initialSubjectState, action: SubjectActio
       return {
         ...state,
         loading: false,
-        subjects: action.payload.map((subject: ISubject) => ({
-          value: subject._id,
-          label: subject.subjectName,
-        })),
+        subjects: action.payload,
         error: null,
         fetched: true,
       };
@@ -43,13 +40,7 @@ export const subjectReducer = (state = initialSubjectState, action: SubjectActio
       return {
         ...state,
         loading: false,
-        subjects: [
-          ...state.subjects,
-          {
-            value: action.payload._id,
-            label: action.payload.subjectName,
-          },
-        ],
+        subjects: [...state.subjects, action.payload],
         error: null,
       };
     case FETCH_SUBJECTS_FAILURE:

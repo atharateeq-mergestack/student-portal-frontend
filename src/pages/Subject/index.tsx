@@ -2,19 +2,19 @@ import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { subjectSchema } from 'utils/validationSchema';
 import { ICreateSubject } from 'utils/types';
-import { RootState } from 'store';
-import { createSubjectRequest } from 'reduxStore/actions/subjectActions';
 import Input from 'components/Input';
 import 'pages/Subject/style.css';
 
-function Subject() {
+interface ISubjectProps{
+  loading: boolean
+  createSubject: (data: ICreateSubject) => void;
+}
+
+const Subject  = ({ loading, createSubject }: ISubjectProps) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state: RootState) => state.subjects);
   const { register, handleSubmit, formState: { errors } } = useForm<ICreateSubject>({
     resolver: yupResolver(subjectSchema),
     mode: 'onBlur',
@@ -24,10 +24,10 @@ function Subject() {
     if (loading) {
       navigate('/dashboard');
     }
-  }, [loading, error, navigate]);
+  }, [loading, navigate]);
 
   const onSubmit: SubmitHandler<ICreateSubject> = async (data) => {
-    dispatch(createSubjectRequest(data));
+    createSubject(data)
   };
 
 

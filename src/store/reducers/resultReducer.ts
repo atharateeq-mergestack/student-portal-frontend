@@ -12,13 +12,11 @@ import {
   DELETE_RESULT_SUCCESS,
   DELETE_RESULT_FAILURE,
   ResultAction,
-} from 'reduxStore/actions/actionTypes';
-import { IResultData, Istats } from 'utils/types';
-import { calculateStats } from 'utils/statsCalculator';
+} from 'store/actions/actionTypes';
+import { IResultData } from 'utils/types';
 
 interface ResultState {
   results: IResultData[];
-  stats: Istats | undefined;
   loading: boolean;
   error: string | null;
   fetched: boolean;
@@ -26,10 +24,9 @@ interface ResultState {
 
 const initialResultState: ResultState = {
   results: [],
-  stats: undefined,
   loading: false,
   error: null,
-  fetched: false
+  fetched: false,
 };
 
 export const resultReducer = (state = initialResultState, action: ResultAction): ResultState => {
@@ -44,37 +41,30 @@ export const resultReducer = (state = initialResultState, action: ResultAction):
         ...state,
         loading: false,
         results: action.payload,
-        stats: calculateStats(action.payload),
         error: null,
         fetched: true,
       };
     case CREATE_RESULT_SUCCESS:
-      const newResultsAfterCreate = [...state.results, action.payload];
       return {
         ...state,
         loading: false,
-        results: newResultsAfterCreate,
-        stats: calculateStats(newResultsAfterCreate),
+        results: [...state.results, action.payload],
         error: null,
       };
     case UPDATE_RESULT_SUCCESS:
-      const newResultsAfterUpdate = state.results.map(result =>
-        result._id === action.payload._id ? action.payload : result
-      );
       return {
         ...state,
         loading: false,
-        results: newResultsAfterUpdate,
-        stats: calculateStats(newResultsAfterUpdate),
+        results: state.results.map(result =>
+          result._id === action.payload._id ? action.payload : result
+        ),
         error: null,
       };
     case DELETE_RESULT_SUCCESS:
-      const newResultsAfterDelete = state.results.filter(result => result._id !== action.payload);
       return {
         ...state,
         loading: false,
-        results: newResultsAfterDelete,
-        stats: calculateStats(newResultsAfterDelete),
+        results: state.results.filter(result => result._id !== action.payload),
         error: null,
       };
     case FETCH_RESULTS_FAILURE:

@@ -1,10 +1,4 @@
-import React from 'react';
-
-interface SummaryCardProps {
-  title: string;
-  value: string | number | undefined;
-  className: string;
-}
+import { SummaryCardProps } from "utils/types";
 
 const SummaryCard = ({ title, value, className } : SummaryCardProps) => {
   return (

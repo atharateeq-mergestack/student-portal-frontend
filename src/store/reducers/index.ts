@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import { subjectReducer } from 'reduxStore/reducers/subjectReducer';
-import { resultReducer } from 'reduxStore/reducers/resultReducer';
+import { subjectReducer } from 'store/reducers/subjectReducer';
+import { resultReducer } from 'store/reducers/resultReducer';
 
 const rootReducer = combineReducers({
   subjects: subjectReducer,

@@ -1,39 +1,28 @@
-import  { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import TableRow from 'components/Table/TableRow';
 import TableHeader from 'components/Table/TableHeader';
 import NoRecord from 'components/NoRecord';
-import { RootState } from 'store';
-import { fetchResultsRequest } from 'reduxStore/actions/resultActions';
+import { IResultData } from 'utils/types';
 
+interface TableProps{
+  results: IResultData[]
+}
 
-const Table = () => {
-  const dispatch = useDispatch();
- 
-  const { results, fetched } = useSelector((state : RootState) => state.results);
-
-  useEffect(() => {  
-    if(!fetched)  
-      dispatch(fetchResultsRequest());
-  }, [dispatch, fetched]);
-
-
+const Table = ({ results }: TableProps) => {
   return (
     <div className="table-section">
       <TableHeader />
       {results.length === 0 ? (
         <NoRecord />
       ):(
-        results.map((results, index) => (
+        results.map((result, index) => (
         <TableRow
           key={index}
-          student={results}
+          student={result}
         />
       ))
     )}
     </div>
   );
-}
+};
 
 export default Table;

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import EditIcon from 'components/Icons/EditIcon';
 import DeleteIcon from 'components/Icons/DeleteIcon';
-import Modal from 'components/Modal';
+import ModalContainer from 'components/Modal/ModalContainer';
 import { IResultData } from 'utils/types';
 
 interface ActionMenuProps {
@@ -41,7 +41,7 @@ const ActionMenu = ({ dropdownRef, setShowModal, setDropdownVisible, selectedStu
     </div>
 
     {showModal && (
-        <Modal
+        <ModalContainer
           message="Are you sure you want to delete this record?"
           selectedStudent={selectedStudent}
           setDropdownVisible={setDropdownVisible}

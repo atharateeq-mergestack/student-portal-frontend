@@ -3,25 +3,27 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { omitBy } from 'lodash';
-import { useDispatch,  useSelector } from 'react-redux';
 
 import { resultSchema } from 'utils/validationSchema';
-import { ICreateResult, IResultData } from 'utils/types';
+import { ICreateResult, IResultData, ISubjectsDropDown } from 'utils/types';
 import { grades } from 'utils/grades';
-import { RootState } from 'store';
-import { fetchSubjectsRequest } from 'reduxStore/actions/subjectActions';
-import { createResultRequest, updateResultRequest } from 'reduxStore/actions/resultActions';
 import SelectComponent from 'components/SelectComponent';
 import Input from 'components/Input';
 import 'pages/AddResult/style.css';
 
-function AddResult() {
+interface IAddResultProps{
+  subjects: ISubjectsDropDown[];
+  fetched: boolean;
+  createResult: (data: ICreateResult) => void;
+  updateResult: (data: ICreateResult) => void;
+  fetchSubjects: () => void;
+}
+
+function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult}: IAddResultProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
   const existingData : IResultData = location.state?.student;
   const isUpdate : boolean = location.state?.isUpdate || false;
-  const { subjects, fetched} = useSelector((state : RootState) => state.subjects);
 
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
@@ -31,16 +33,16 @@ function AddResult() {
 
   useEffect(() => {  
     if(!fetched)  {
-      dispatch(fetchSubjectsRequest());
-    }
-  }, [dispatch, fetched, subjects]);
+      fetchSubjects()
+   }
+  }, [ fetched, fetchSubjects ]);
 
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
     const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
     if (isUpdate && existingData) {
-      dispatch(updateResultRequest({ ...existingData, ...filteredData }));
+      updateResult({...existingData, ...filteredData})
     } else {
-      dispatch(createResultRequest(filteredData));
+      createResult(filteredData)
     }
     navigate('/dashboard');
   };

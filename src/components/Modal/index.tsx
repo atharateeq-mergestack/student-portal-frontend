@@ -1,7 +1,4 @@
-import { useDispatch } from 'react-redux';
-
 import { IResultData } from 'utils/types';
-import { deleteResultRequest } from 'reduxStore/actions/resultActions';
 import 'components/Modal/style.css'; 
 
 interface ModalProps{
@@ -9,14 +6,13 @@ interface ModalProps{
   selectedStudent: IResultData | null;
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteResult: (data: IResultData)  => void
 }
 
-const Modal = ({ message, selectedStudent, setDropdownVisible, setShowModal } : ModalProps) => {
-  const dispatch = useDispatch();
-
+const Modal = ({ message, selectedStudent, setDropdownVisible, setShowModal, deleteResult } : ModalProps) => {
   const confirmDelete = () => {
     if (selectedStudent) {
-      dispatch(deleteResultRequest(selectedStudent));
+      deleteResult(selectedStudent)
     }
     setShowModal(false);
     setDropdownVisible(false);
