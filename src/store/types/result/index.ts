@@ -1,61 +1,61 @@
 import { ICreateResult, IResultData } from "utils/types";
 import { RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API, DELETE_RESULT_API } from 'store/types';
 
-interface IFetchResultsRequest {
+export interface IFetchResultsRequest {
   type: typeof RESULTS_API.STARTED;
 }
 
-interface IFetchResultsSuccess {
+export interface IFetchResultsSuccess {
   type: typeof RESULTS_API.FULLFILLED;
   payload: IResultData[];
 }
 
-interface IFetchResultsFailure {
+export interface IFetchResultsFailure {
   type: typeof RESULTS_API.REJECTED;
   error: string;
 }
 
-interface ICreateResultRequest {
+export interface ICreateResultRequest {
   type: typeof CREATE_RESULT_API.STARTED;
   payload: ICreateResult;
 }
 
-interface ICreateResultSuccess {
+export interface ICreateResultSuccess {
   type: typeof CREATE_RESULT_API.FULLFILLED;
   payload: IResultData;
 }
 
-interface ICreateResultFailure {
+export interface ICreateResultFailure {
   type: typeof CREATE_RESULT_API.REJECTED;
   error: string;
 }
 
-interface IUpdateResultRequest {
+export interface IUpdateResultRequest {
   type: typeof UPDATE_RESULT_API.STARTED;
   payload: IResultData;
 }
 
-interface IUpdateResultSuccess {
+export interface IUpdateResultSuccess {
   type: typeof UPDATE_RESULT_API.FULLFILLED;
   payload: IResultData;
 }
 
-interface IUpdateResultFailure {
+export interface IUpdateResultFailure {
   type: typeof UPDATE_RESULT_API.REJECTED;
   error: string;
 }
 
-interface IDeleteResultRequest {
+export interface IDeleteResultRequest {
   type: typeof DELETE_RESULT_API.STARTED;
   payload: string;
 }
 
-interface IDeleteResultSuccess {
+export interface IDeleteResultSuccess {
   type: typeof DELETE_RESULT_API.FULLFILLED;
   payload: string;
 }
 
-interface IDeleteResultFailure {
+export interface IDeleteResultFailure {
   type: typeof DELETE_RESULT_API.REJECTED;
   error: string;
 }

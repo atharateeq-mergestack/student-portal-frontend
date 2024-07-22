@@ -1,31 +1,31 @@
 import { ICreateSubject, ISubject } from "utils/types";
 import { SUBJECTS_API, CREATE_SUBJECT_API } from 'store/types';
 
-interface IFetchSubjectsRequest {
+export interface IFetchSubjectsRequest {
   type: typeof SUBJECTS_API.STARTED;
 }
 
-interface IFetchSubjectsSuccess {
+export interface IFetchSubjectsSuccess {
   type: typeof SUBJECTS_API.FULLFILLED;
   payload: ISubject[];
 }
 
-interface IFetchSubjectsFailure {
+export interface IFetchSubjectsFailure {
   type: typeof SUBJECTS_API.REJECTED;
   error: string;
 }
 
-interface ICreateSubjectRequest {
+export interface ICreateSubjectRequest {
   type: typeof CREATE_SUBJECT_API.STARTED;
   payload: ICreateSubject;
 }
 
-interface ICreateSubjectSuccess {
+export interface ICreateSubjectSuccess {
   type: typeof CREATE_SUBJECT_API.FULLFILLED;
   payload: ISubject;
 }
 
-interface ICreateSubjectFailure {
+export interface ICreateSubjectFailure {
   type: typeof CREATE_SUBJECT_API.REJECTED;
   error: string;
 }

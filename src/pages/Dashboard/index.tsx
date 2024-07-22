@@ -1,6 +1,5 @@
 import DashboardHeader from 'components/DashboardHeader';
-import SummaryCardsContainer from 'components/SummaryCards/SummaryCardsContainer';
-import TableContainer from 'components/Table/TableContainer';
+import { SummaryCardsContainer, TableContainer } from 'containers';
 import 'pages/Dashboard/style.css';
 
 function Dashboard() {

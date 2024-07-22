@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 
 import EditIcon from 'components/Icons/EditIcon';
 import DeleteIcon from 'components/Icons/DeleteIcon';
-import ModalContainer from 'components/Modal/ModalContainer';
 import { IResultData } from 'utils/types';
+import { ModalContainer } from 'containers';
 
 interface IActionMenuProps {
   dropdownRef: React.RefObject<HTMLDivElement>;

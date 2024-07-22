@@ -1,4 +1,4 @@
-import { SummaryCardProps } from "utils/types";
+import { ISummaryCardProps } from "utils/types";
 
 const SummaryCard = ({ title, value, className } : ISummaryCardProps) => {
   return (

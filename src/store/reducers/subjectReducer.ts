@@ -1,12 +1,8 @@
 import {
-  FETCH_SUBJECTS_REQUEST,
-  FETCH_SUBJECTS_SUCCESS,
-  FETCH_SUBJECTS_FAILURE,
-  CREATE_SUBJECT_REQUEST,
-  CREATE_SUBJECT_SUCCESS,
-  CREATE_SUBJECT_FAILURE,
-  SubjectAction,
-} from 'store/actions/actionTypes';
+  SUBJECTS_API,
+  CREATE_SUBJECT_API,
+} from 'store/types';
+import {  ICreateSubjectFailure, ICreateSubjectSuccess, IFetchSubjectsFailure, IFetchSubjectsSuccess, SubjectAction } from 'store/types/subject';
 import { ISubject } from 'utils/types';
 
 interface SubjectState {
@@ -23,30 +19,55 @@ const initialSubjectState: SubjectState = {
   fetched: false,
 };
 
+function isFetchSubjectsSuccess(action: SubjectAction): action is IFetchSubjectsSuccess {
+  return action.type === SUBJECTS_API.FULLFILLED;
+}
+
+function isCreateSubjectSuccess(action: SubjectAction): action is ICreateSubjectSuccess {
+  return action.type === CREATE_SUBJECT_API.FULLFILLED;
+}
+
+function isFailureAction(action: SubjectAction): action is IFetchSubjectsFailure | ICreateSubjectFailure {
+  return [SUBJECTS_API.REJECTED, CREATE_SUBJECT_API.REJECTED].includes(action.type);
+}
+
 export const subjectReducer = (state = initialSubjectState, action: SubjectAction): SubjectState => {
   switch (action.type) {
-    case FETCH_SUBJECTS_REQUEST:
-    case CREATE_SUBJECT_REQUEST:
+    case SUBJECTS_API.STARTED:
+    case CREATE_SUBJECT_API.STARTED:
       return { ...state, loading: true, error: null };
-    case FETCH_SUBJECTS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        subjects: action.payload,
-        error: null,
-        fetched: true,
-      };
-    case CREATE_SUBJECT_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        subjects: [...state.subjects, action.payload],
-        error: null,
-      };
-    case FETCH_SUBJECTS_FAILURE:
-    case CREATE_SUBJECT_FAILURE:
-      return { ...state, loading: false, error: action.error };
+    
+    case SUBJECTS_API.FULLFILLED:
+      if (isFetchSubjectsSuccess(action)) {
+        return {
+          ...state,
+          loading: false,
+          subjects: action.payload,
+          error: null,
+          fetched: true,
+        };
+      }
+      return state;
+    
+    case CREATE_SUBJECT_API.FULLFILLED:
+      if (isCreateSubjectSuccess(action)) {
+        return {
+          ...state,
+          loading: false,
+          subjects: [...state.subjects, action.payload],
+          error: null,
+        };
+      }
+      return state;
+    
+    case SUBJECTS_API.REJECTED:
+    case CREATE_SUBJECT_API.REJECTED:
+      if (isFailureAction(action)) {
+        return { ...state, loading: false, error: action.error };
+      }
+      return state;
+
     default:
       return state;
   }
-};
+}
