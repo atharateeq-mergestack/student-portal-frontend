@@ -9,8 +9,8 @@ import Table from 'components/Table';
 import AddResult from 'pages/AddResult';
 import Subject from 'pages/Subject';
 import { IResultData, ICreateResult, ICreateSubject } from 'utils/types';
-import { selectCardData } from './selectors/result';
-import { selectSubjectDropDown } from './selectors/subject';
+import { selectCardData } from 'containers/selectors/result';
+import { selectSubjectDropDown } from 'containers/selectors/subject';
 import { createSubjectAction, fetchSubjectsAction } from 'store/reducers/subjectReducer';
 import { createResultAction, deleteResultAction, fetchResultsAction, updateResultAction } from 'store/reducers/resultReducer';
 
@@ -21,7 +21,7 @@ const mapDispatchToPropsModal = (dispatch: ThunkDispatch<RootState, unknown, Any
   deleteResult: async (data: IResultData) => dispatch( deleteResultAction(data))
 });
 
-const ModalContainer = connect(mapStateToPropsModal, mapDispatchToPropsModal)(Modal);
+export const ModalContainer = connect(mapStateToPropsModal, mapDispatchToPropsModal)(Modal);
 
 // ====================  SummaryCardsContainer ====================
 const mapStateToPropsSummaryCards = (state: RootState) => {
@@ -36,7 +36,7 @@ const mapDispatchToPropsSummaryCards = (dispatch: ThunkDispatch<RootState, unkno
   fetchResults: async () => dispatch(fetchResultsAction())
 });
 
-const SummaryCardsContainer = connect(mapStateToPropsSummaryCards, mapDispatchToPropsSummaryCards)(SummaryCards);
+export const SummaryCardsContainer = connect(mapStateToPropsSummaryCards, mapDispatchToPropsSummaryCards)(SummaryCards);
 
 // ====================  TableContainer ====================
 const mapStateToPropsTable = (state: RootState) => ({
@@ -48,7 +48,7 @@ const mapDispatchToPropsTable = (dispatch: ThunkDispatch<RootState, unknown, Any
   fetchResults: async () => dispatch(fetchResultsAction())
 });
 
-const TableContainer = connect(mapStateToPropsTable, mapDispatchToPropsTable)(Table);
+export const TableContainer = connect(mapStateToPropsTable, mapDispatchToPropsTable)(Table);
 
 // ====================  AddResultContainer ====================
 const mapStateToPropsAddResult = (state: RootState) => ({
@@ -63,7 +63,7 @@ const mapDispatchToPropsAddResult = (dispatch: ThunkDispatch<RootState, unknown,
   fetchSubjects: async () => dispatch(fetchSubjectsAction())
 });
 
-const AddResultContainer = connect(mapStateToPropsAddResult, mapDispatchToPropsAddResult)(AddResult);
+export const AddResultContainer = connect(mapStateToPropsAddResult, mapDispatchToPropsAddResult)(AddResult);
 
 // ====================  SubjectContainer ====================
 const mapStateToPropsSubject = (state: RootState) => ({
@@ -75,12 +75,4 @@ const mapDispatchToPropsSubject = (dispatch: ThunkDispatch<RootState, unknown, A
   createSubject: async (data: ICreateSubject) => dispatch(createSubjectAction(data))
 });
 
-const SubjectContainer = connect(mapStateToPropsSubject, mapDispatchToPropsSubject)(Subject);
-
-export {
-  ModalContainer,
-  SummaryCardsContainer,
-  TableContainer,
-  AddResultContainer,
-  SubjectContainer,
-};
+export const SubjectContainer = connect(mapStateToPropsSubject, mapDispatchToPropsSubject)(Subject);
