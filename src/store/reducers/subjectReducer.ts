@@ -1,9 +1,7 @@
-import {
-  SUBJECTS_API,
-  CREATE_SUBJECT_API,
-} from 'store/types';
-import {  ICreateSubjectFailure, ICreateSubjectSuccess, IFetchSubjectsFailure, IFetchSubjectsSuccess, SubjectAction } from 'store/types/subject';
-import { ISubject } from 'utils/types';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { ICreateSubject, ISubject } from 'utils/types';
+import { createSubject, fetchSubjects } from 'api/subject';
+import showToast from 'utils/toastMessage';
 
 interface SubjectState {
   subjects: ISubject[];
@@ -12,62 +10,68 @@ interface SubjectState {
   fetched: boolean;
 }
 
-const initialSubjectState: SubjectState = {
+const initialState: SubjectState = {
   subjects: [],
   loading: false,
   error: null,
   fetched: false,
 };
 
-function isFetchSubjectsSuccess(action: SubjectAction): action is IFetchSubjectsSuccess {
-  return action.type === SUBJECTS_API.FULLFILLED;
-}
-
-function isCreateSubjectSuccess(action: SubjectAction): action is ICreateSubjectSuccess {
-  return action.type === CREATE_SUBJECT_API.FULLFILLED;
-}
-
-function isFailureAction(action: SubjectAction): action is IFetchSubjectsFailure | ICreateSubjectFailure {
-  return [SUBJECTS_API.REJECTED, CREATE_SUBJECT_API.REJECTED].includes(action.type);
-}
-
-export const subjectReducer = (state = initialSubjectState, action: SubjectAction): SubjectState => {
-  switch (action.type) {
-    case SUBJECTS_API.STARTED:
-    case CREATE_SUBJECT_API.STARTED:
-      return { ...state, loading: true, error: null };
-    
-    case SUBJECTS_API.FULLFILLED:
-      if (isFetchSubjectsSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          subjects: action.payload,
-          error: null,
-          fetched: true,
-        };
-      }
-      return state;
-    
-    case CREATE_SUBJECT_API.FULLFILLED:
-      if (isCreateSubjectSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          subjects: [...state.subjects, action.payload],
-          error: null,
-        };
-      }
-      return state;
-    
-    case SUBJECTS_API.REJECTED:
-    case CREATE_SUBJECT_API.REJECTED:
-      if (isFailureAction(action)) {
-        return { ...state, loading: false, error: action.error };
-      }
-      return state;
-
-    default:
-      return state;
+export const fetchSubjectsAction = createAsyncThunk('subjects/fetchSubjects', async (_, { rejectWithValue }) => {
+  try {
+    const response = await fetchSubjects();
+    return response.data;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
   }
-}
+});
+
+export const createSubjectAction = createAsyncThunk('subjects/createSubject', async (subject: ICreateSubject, { rejectWithValue }) => {
+  try {
+    const response = await createSubject(subject);
+    showToast(response);
+    return response.data;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
+  }
+});
+
+const subjectSlice = createSlice({
+  name: 'subjects',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSubjectsAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSubjectsAction.fulfilled, (state, action: PayloadAction<ISubject[]>) => {
+        state.loading = false;
+        state.subjects = action.payload;
+        state.error = null;
+        state.fetched = true;
+      })
+      .addCase(fetchSubjectsAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createSubjectAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createSubjectAction.fulfilled, (state, action: PayloadAction<ISubject>) => {
+        state.loading = false;
+        state.subjects.push(action.payload);
+        state.error = null;
+      })
+      .addCase(createSubjectAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
+
+export default subjectSlice.reducer;

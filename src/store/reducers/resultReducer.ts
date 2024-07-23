@@ -1,11 +1,7 @@
-import {
-  RESULTS_API,
-  CREATE_RESULT_API,
-  UPDATE_RESULT_API,
-  DELETE_RESULT_API
-} from 'store/types';
-import { ICreateResultFailure, ICreateResultSuccess, IDeleteResultFailure, IDeleteResultSuccess, IFetchResultsFailure, IFetchResultsSuccess, IUpdateResultFailure, IUpdateResultSuccess, ResultAction } from 'store/types/result';
-import { IResultData } from 'utils/types';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { ICreateResult, IResultData } from 'utils/types';
+import { createResult, deleteResult, getResult, updateResult } from 'api/result';
+import showToast from 'utils/toastMessage';
 
 interface ResultState {
   results: IResultData[];
@@ -14,98 +10,119 @@ interface ResultState {
   fetched: boolean;
 }
 
-const initialResultState: ResultState = {
+const initialState: ResultState = {
   results: [],
   loading: false,
   error: null,
   fetched: false,
 };
 
-function isFetchResultsSuccess(action: ResultAction): action is IFetchResultsSuccess {
-  return action.type === RESULTS_API.FULLFILLED;
-}
-
-function isCreateResultSuccess(action: ResultAction): action is ICreateResultSuccess {
-  return action.type === CREATE_RESULT_API.FULLFILLED;
-}
-
-function isUpdateResultSuccess(action: ResultAction): action is IUpdateResultSuccess {
-  return action.type === UPDATE_RESULT_API.FULLFILLED;
-}
-
-function isDeleteResultSuccess(action: ResultAction): action is IDeleteResultSuccess {
-  return action.type === DELETE_RESULT_API.FULLFILLED;
-}
-
-function isFailureAction(action: ResultAction): action is IFetchResultsFailure | ICreateResultFailure | IUpdateResultFailure | IDeleteResultFailure {
-  return [RESULTS_API.REJECTED, CREATE_RESULT_API.REJECTED, UPDATE_RESULT_API.REJECTED, DELETE_RESULT_API.REJECTED].includes(action.type);
-}
-
-export const resultReducer = (state = initialResultState, action: ResultAction): ResultState => {
-  switch (action.type) {
-    case RESULTS_API.STARTED:
-    case CREATE_RESULT_API.STARTED:
-    case UPDATE_RESULT_API.STARTED:
-    case DELETE_RESULT_API.STARTED:
-      return { ...state, loading: true, error: null };
-    
-    case RESULTS_API.FULLFILLED:
-      if (isFetchResultsSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          results: action.payload,
-          error: null,
-          fetched: true,
-        };
-      }
-      return state;
-    
-    case CREATE_RESULT_API.FULLFILLED:
-      if (isCreateResultSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          results: [...state.results, action.payload],
-          error: null,
-        };
-      }
-      return state;
-    
-    case UPDATE_RESULT_API.FULLFILLED:
-      if (isUpdateResultSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          results: state.results.map(result =>
-            result._id === action.payload._id ? action.payload : result
-          ),
-          error: null,
-        };
-      }
-      return state;
-    
-    case DELETE_RESULT_API.FULLFILLED:
-      if (isDeleteResultSuccess(action)) {
-        return {
-          ...state,
-          loading: false,
-          results: state.results.filter(result => result._id !== action.payload),
-          error: null,
-        };
-      }
-      return state;
-    
-    case RESULTS_API.REJECTED:
-    case CREATE_RESULT_API.REJECTED:
-    case UPDATE_RESULT_API.REJECTED:
-    case DELETE_RESULT_API.REJECTED:
-      if (isFailureAction(action)) {
-        return { ...state, loading: false, error: action.error };
-      }
-      return state;
-
-    default:
-      return state;
+export const fetchResultsAction = createAsyncThunk('results/fetchResults', async (_, { rejectWithValue }) => {
+  try {
+    const response = await getResult();
+    return response.data;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
   }
-}
+});
+
+export const createResultAction = createAsyncThunk('results/createResult', async (result: ICreateResult, { rejectWithValue }) => {
+  try {
+    const response = await createResult(result);
+    showToast(response);
+    return response.data;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
+  }
+});
+
+export const updateResultAction = createAsyncThunk('results/updateResult', async (result: ICreateResult, { rejectWithValue }) => {
+  try {
+    const response = await updateResult(result);
+    showToast(response);
+    return response.data;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
+  }
+});
+
+export const deleteResultAction = createAsyncThunk('results/deleteResult', async (result: IResultData, { rejectWithValue }) => {
+  try {
+    const response = await deleteResult(result);
+    showToast(response);
+    return result;
+  } catch (error: any) {
+    showToast(error);
+    return rejectWithValue(error.message);
+  }
+});
+
+const resultSlice = createSlice({
+  name: 'results',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchResultsAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchResultsAction.fulfilled, (state, action: PayloadAction<IResultData[]>) => {
+        state.loading = false;
+        state.results = action.payload;
+        state.error = null;
+        state.fetched = true;
+      })
+      .addCase(fetchResultsAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createResultAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createResultAction.fulfilled, (state, action: PayloadAction<IResultData>) => {
+        state.loading = false;
+        state.results.push(action.payload);
+        state.error = null;
+      })
+      .addCase(createResultAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateResultAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateResultAction.fulfilled, (state, action: PayloadAction<IResultData>) => {
+        state.loading = false;
+        state.results = state.results.map((result) =>
+          result._id === action.payload._id ? action.payload : result
+        );
+        state.error = null;
+      })
+      .addCase(updateResultAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteResultAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteResultAction.fulfilled, (state, action: PayloadAction<IResultData>) => {
+        state.loading = false;
+        state.results = state.results.filter((result) => result._id !== action.payload._id);
+        state.error = null;
+      })
+      .addCase(deleteResultAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
+
+export default resultSlice.reducer; 
+export const { actions: resultActions } = resultSlice; 
