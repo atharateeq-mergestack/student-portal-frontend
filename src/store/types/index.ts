@@ -11,4 +11,3 @@ export const API_TYPE = <S extends string>(action: S) => ({
   export const CREATE_RESULT_API = API_TYPE('CREATE_RESULT');
   export const UPDATE_RESULT_API = API_TYPE('UPDATE_RESULT');
   export const DELETE_RESULT_API = API_TYPE('DELETE_RESULT');
-  
