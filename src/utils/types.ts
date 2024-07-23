@@ -73,3 +73,13 @@ export interface SelectProps {
   error?: FieldError;
 }
 
+export interface ISubjectsDropDown{ 
+  value: string; 
+  label: string 
+}
+
+export interface ISummaryCardProps {
+  title: string;
+  value: string | number | undefined;
+  className: string;
+}

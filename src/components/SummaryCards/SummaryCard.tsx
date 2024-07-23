@@ -1,12 +1,6 @@
-import React from 'react';
+import { ISummaryCardProps } from "utils/types";
 
-interface SummaryCardProps {
-  title: string;
-  value: string | number | undefined;
-  className: string;
-}
-
-const SummaryCard = ({ title, value, className } : SummaryCardProps) => {
+const SummaryCard = ({ title, value, className } : ISummaryCardProps) => {
   return (
     <div className={`summary-card ${className}`}>
       <div className="summary-title">{title}</div>
