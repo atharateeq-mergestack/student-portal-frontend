@@ -7,10 +7,9 @@ import {
   fetchResultsFulfilled, fetchResultsRejected, 
   createResultFulfilled, createResultRejected, 
   updateResultFulfilled, updateResultRejected, 
-  deleteResultFulfilled, deleteResultRejected, 
-  fetchResultsStarted, createResultStarted,
-  updateResultStarted, deleteResultStarted
-} from 'store/reducers/resultReducer';
+  deleteResultFulfilled, deleteResultRejected,
+  fetchResultsStarted
+} from 'store/reducers/result';
 import { RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API, DELETE_RESULT_API } from 'store/types';
 
 function* fetchResultsSaga() {
@@ -26,7 +25,6 @@ function* fetchResultsSaga() {
 
 function* createResultSaga(action: any) {
   try {
-    yield put(createResultStarted());
     const response : IApiResponse = yield call(createResult, action.payload);
     yield put(createResultFulfilled(response.data));
     showToast(response);
@@ -38,7 +36,6 @@ function* createResultSaga(action: any) {
 
 function* updateResultSaga(action: any) {
   try {
-    yield put(updateResultStarted());
     const response : IApiResponse = yield call(updateResult, action.payload);
     yield put(updateResultFulfilled(response.data));
     showToast(response);
@@ -50,7 +47,6 @@ function* updateResultSaga(action: any) {
 
 function* deleteResultSaga(action: any) {
   try {
-    yield put(deleteResultStarted());
     const response : IApiResponse = yield call(deleteResult, action.payload);
     yield put(deleteResultFulfilled(action.payload));
     showToast(response);

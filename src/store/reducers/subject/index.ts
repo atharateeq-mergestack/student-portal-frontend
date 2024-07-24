@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CREATE_SUBJECT_API, SUBJECTS_API } from 'store/types';
 
 import { ISubject } from 'utils/types';
 
@@ -47,6 +48,13 @@ const subjectSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(SUBJECTS_API.STARTED || CREATE_SUBJECT_API.STARTED, (state) => {        
+        state.loading = true;
+        state.error = null;
+      })
   },
 });
 

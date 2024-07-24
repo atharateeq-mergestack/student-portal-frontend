@@ -4,31 +4,28 @@ import { fetchSubjects, createSubject } from 'api/subject';
 import { SUBJECTS_API, CREATE_SUBJECT_API } from 'store/types';
 import { 
   fetchSubjectsFulfilled, fetchSubjectsRejected, 
-  createSubjectFulfilled, createSubjectRejected, 
-  fetchSubjectsStarted, createSubjectStarted
-} from 'store/reducers/subjectReducer';
+  createSubjectFulfilled, createSubjectRejected,
+} from 'store/reducers/subject';
 import { IApiResponse } from 'utils/types';
 
 function* fetchSubjectsSaga() {
   try{
-    yield put(fetchSubjectsStarted());
     const response : IApiResponse = yield call(fetchSubjects);
     yield put(fetchSubjectsFulfilled(response.data));
   } catch (error: any) {
-    showToast(error);
     yield put(fetchSubjectsRejected(error.message));
+    showToast(error);
   }
 }
 
 function* createSubjectSaga(action: any) {
   try {
-    yield put(createSubjectStarted());
     const response : IApiResponse = yield call(createSubject, action.payload);
     yield put(createSubjectFulfilled(response.data));
     showToast(response);
   } catch (error: any) {
-    showToast(error);
     yield put(createSubjectRejected(error.message));
+    showToast(error);
   }
 }
 

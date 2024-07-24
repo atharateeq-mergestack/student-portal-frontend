@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CREATE_RESULT_API, DELETE_RESULT_API, RESULTS_API, UPDATE_RESULT_API } from 'store/types';
 
 import { IResultData } from 'utils/types';
 
@@ -75,6 +76,17 @@ const resultSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(
+        RESULTS_API.STARTED || 
+        CREATE_RESULT_API.STARTED ||
+        UPDATE_RESULT_API.STARTED ||
+        DELETE_RESULT_API.STARTED, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
   },
 });
 
