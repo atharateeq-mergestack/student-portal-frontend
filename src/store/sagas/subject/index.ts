@@ -1,4 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
+
 import showToast from 'utils/toastMessage';
 import { fetchSubjects, createSubject } from 'api/subject';
 import { SUBJECTS_API, CREATE_SUBJECT_API } from 'store/types';
@@ -6,7 +8,7 @@ import {
   fetchSubjectsFulfilled, fetchSubjectsRejected, 
   createSubjectFulfilled, createSubjectRejected,
 } from 'store/reducers/subject';
-import { IApiResponse } from 'utils/types';
+import { IApiResponse, ICreateSubject } from 'utils/types';
 
 function* fetchSubjectsSaga() {
   try{
@@ -18,7 +20,7 @@ function* fetchSubjectsSaga() {
   }
 }
 
-function* createSubjectSaga(action: any) {
+function* createSubjectSaga(action: PayloadAction<ICreateSubject>) {
   try {
     const response : IApiResponse = yield call(createSubject, action.payload);
     yield put(createSubjectFulfilled(response.data));

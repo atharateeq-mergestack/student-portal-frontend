@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { AnyAction } from 'redux';
+import { AnyAction } from 'redux-saga';
 
 import { RootState } from 'store';
 import Modal from 'components/Modal';
@@ -56,7 +56,7 @@ const mapStateToPropsAddResult = (state: RootState) => ({
   fetched: state.subjects.fetched,
 });
 
-const mapDispatchToPropsAddResult = (dispatch: (action: AnyAction) => void) => ({
+const mapDispatchToPropsAddResult = (dispatch: (action: PayloadAction<ICreateResult> | AnyAction) => void) => ({
   createResult: (data: ICreateResult) => dispatch({ type: CREATE_RESULT_API.STARTED, payload: data }),
   updateResult: (data: ICreateResult) => dispatch({ type: UPDATE_RESULT_API.STARTED, payload: data }),
   fetchSubjects: () => dispatch({ type: SUBJECTS_API.STARTED })
@@ -70,7 +70,7 @@ const mapStateToPropsSubject = (state: RootState) => ({
   error: state.subjects.error,
 });
 
-const mapDispatchToPropsSubject = (dispatch: (action: AnyAction) => void) => ({
+const mapDispatchToPropsSubject = (dispatch: (action: PayloadAction<ICreateSubject>) => void) => ({
   createSubject: (data: ICreateSubject) => dispatch({ type: CREATE_SUBJECT_API.STARTED, payload: data })
 });
 

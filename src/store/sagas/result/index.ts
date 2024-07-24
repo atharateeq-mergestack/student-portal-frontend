@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import showToast from 'utils/toastMessage';
-import { IApiResponse } from 'utils/types';
+import { IApiResponse, ICreateResult, IResultData } from 'utils/types';
 import { getResult, createResult, updateResult, deleteResult } from 'api/result';
 import { 
   fetchResultsFulfilled, fetchResultsRejected, 
@@ -11,6 +11,7 @@ import {
   fetchResultsStarted
 } from 'store/reducers/result';
 import { RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API, DELETE_RESULT_API } from 'store/types';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchResultsSaga() {
   try {
@@ -23,7 +24,7 @@ function* fetchResultsSaga() {
   }
 }
 
-function* createResultSaga(action: any) {
+function* createResultSaga(action: PayloadAction<ICreateResult>) {
   try {
     const response : IApiResponse = yield call(createResult, action.payload);
     yield put(createResultFulfilled(response.data));
@@ -34,7 +35,7 @@ function* createResultSaga(action: any) {
   }
 }
 
-function* updateResultSaga(action: any) {
+function* updateResultSaga(action: PayloadAction<ICreateResult>) {
   try {
     const response : IApiResponse = yield call(updateResult, action.payload);
     yield put(updateResultFulfilled(response.data));
@@ -45,7 +46,7 @@ function* updateResultSaga(action: any) {
   }
 }
 
-function* deleteResultSaga(action: any) {
+function* deleteResultSaga(action: PayloadAction<IResultData>) {
   try {
     const response : IApiResponse = yield call(deleteResult, action.payload);
     yield put(deleteResultFulfilled(action.payload));
