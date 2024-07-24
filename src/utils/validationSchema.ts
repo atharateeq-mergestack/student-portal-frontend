@@ -44,9 +44,12 @@ export const loginSchema = yup.object().shape({
     subjectName: yup
       .string()
       .required('Subject name is required')
-      .matches(/^[a-zA-Z0-9!@#$%^&*()_+{}:;<>,.?~\\-\s]*$/, 'Subject name has invalid entry.'),
-      subjectDescription: yup
+      .trim()
+      .min(1, 'Subject name cannot be all white space')
+      .matches(/^[a-zA-Z][a-zA-Z0-9\s]*$/, 'Subject name must start with a letter and can contain letters, numbers, and spaces.'),
+    subjectDescription: yup
       .string()
+      .trim()
       .matches(/^[a-zA-Z0-9!@#$%^&*()_+{}:;<>,.?~\\-\s]*$/, 'Subject description has invalid entry.'),
   });
 
