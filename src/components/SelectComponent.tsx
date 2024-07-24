@@ -20,7 +20,7 @@ const customStyles: StylesConfig = {
     ...provided,
     color: '#757575',
     fontSize: '13px',
-    padding: '10px'
+    paddingLeft: '7px'
   }),
   indicatorSeparator: () => ({}),
   singleValue: (provided) => ({
@@ -28,6 +28,12 @@ const customStyles: StylesConfig = {
     color: '#333',
     fontSize: '13px',
     padding: '10px'
+  }),
+  input:(Provider) =>({
+    ...Provider,
+    margin: 0,
+    paddingBottom: 0,
+    paddingTop: 0,
   })
 };
 
@@ -43,7 +49,7 @@ const SelectComponent = ({
   defaultValue,
   error
 }: ISelectProps) => (
-  <div className="form-group">
+  <div className={`form-group ${error ? 'input-error' : ''}`}>
     <label htmlFor={id}>{label}</label>
     <Select
       id={id}

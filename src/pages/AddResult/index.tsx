@@ -25,9 +25,9 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
   const existingData : IResultData = location.state?.student;
   const isUpdate : boolean = location.state?.isUpdate || false;
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
+  const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: { ...existingData, subjectId: existingData?.subjectId._id } || {}
   });
 
@@ -47,17 +47,19 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
     navigate('/dashboard');
   };
 
-  const handleSubjectChange = (selectedOption: any) => {
+  const handleSubjectChange = async (selectedOption: any) => {
     setValue('subjectId', selectedOption.value);
+    await trigger('subjectId');
   };
-
-  const handleGradeChange = (selectedOption: any) => {
+  
+  const handleGradeChange = async (selectedOption: any) => {
     setValue('grade', selectedOption.value);
+    await trigger('grade');
   };
 
   return (
     <div className="result-container">
-      <h1>{isUpdate ? 'Update' : 'Add'} Student Data</h1>
+      <h1>{isUpdate ? 'Edit' : 'Add'} Student Data</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
 
         <Input 
@@ -86,7 +88,7 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
         <Input 
           id="marks" 
           label="Marks" 
-          type="text" 
+          type="number" 
           placeholder="Enter marks" 
           register={register} 
           error={errors.marks} 
