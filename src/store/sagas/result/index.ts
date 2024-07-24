@@ -18,8 +18,8 @@ function* fetchResultsSaga() {
     const response : IApiResponse = yield call(getResult);
     yield put(fetchResultsFulfilled(response.data));
   } catch (error: any) {
-    showToast(error);
     yield put(fetchResultsRejected(error.message));
+    showToast(error);
   }
 }
 
@@ -29,8 +29,8 @@ function* createResultSaga(action: any) {
     yield put(createResultFulfilled(response.data));
     showToast(response);
   } catch (error: any) {
-    showToast(error);
     yield put(createResultRejected(error.message));
+    showToast(error);
   }
 }
 
@@ -40,8 +40,8 @@ function* updateResultSaga(action: any) {
     yield put(updateResultFulfilled(response.data));
     showToast(response);
   } catch (error: any) {
-    showToast(error);
     yield put(updateResultRejected(error.message));
+    showToast(error);
   }
 }
 
@@ -51,8 +51,8 @@ function* deleteResultSaga(action: any) {
     yield put(deleteResultFulfilled(action.payload));
     showToast(response);
   } catch (error: any) {
-    showToast(error);
     yield put(deleteResultRejected(error.message));
+    showToast(error);
   }
 }
 
