@@ -60,7 +60,8 @@ export const loginSchema = yup.object().shape({
       .required('Subject is required'),
     marks: yup
       .number()
-      .required('Marks are required')
+      .typeError('Marks must be a valid number')
+      .required('Marks are required') 
       .min(0, 'Marks must be at least 0')
       .max(100, 'Marks must be at most 100'),
     grade: yup
@@ -68,4 +69,3 @@ export const loginSchema = yup.object().shape({
       .required('Grade is required')
       .matches(/^[A-F][+-]?$/, 'Grade has invalid entry.'),
   });
-  
