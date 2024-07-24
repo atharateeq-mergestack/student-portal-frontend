@@ -1,77 +1,62 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { ICreateSubject, ISubject } from 'utils/types';
-import { createSubject, fetchSubjects } from 'api/subject';
-import showToast from 'utils/toastMessage';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface SubjectState {
+import { ISubject } from 'utils/types';
+
+interface ISubjectState {
   subjects: ISubject[];
   loading: boolean;
   error: string | null;
   fetched: boolean;
 }
 
-const initialState: SubjectState = {
+const initialState: ISubjectState = {
   subjects: [],
   loading: false,
   error: null,
   fetched: false,
 };
 
-export const fetchSubjectsAction = createAsyncThunk('subjects/fetchSubjects', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetchSubjects();
-    return response.data;
-  } catch (error: any) {
-    showToast(error);
-    return rejectWithValue(error.message);
-  }
-});
-
-export const createSubjectAction = createAsyncThunk('subjects/createSubject', async (subject: ICreateSubject, { rejectWithValue }) => {
-  try {
-    const response = await createSubject(subject);
-    showToast(response);
-    return response.data;
-  } catch (error: any) {
-    showToast(error);
-    return rejectWithValue(error.message);
-  }
-});
-
 const subjectSlice = createSlice({
   name: 'subjects',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchSubjectsAction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchSubjectsAction.fulfilled, (state, action: PayloadAction<ISubject[]>) => {
-        state.loading = false;
-        state.subjects = action.payload;
-        state.error = null;
-        state.fetched = true;
-      })
-      .addCase(fetchSubjectsAction.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(createSubjectAction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(createSubjectAction.fulfilled, (state, action: PayloadAction<ISubject>) => {
-        state.loading = false;
-        state.subjects.push(action.payload);
-        state.error = null;
-      })
-      .addCase(createSubjectAction.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      });
+  reducers: {
+    fetchSubjectsStarted(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchSubjectsFulfilled(state, action: PayloadAction<ISubject[]>) {
+      state.loading = false;
+      state.subjects = action.payload;
+      state.error = null;
+      state.fetched = true;
+    },
+    fetchSubjectsRejected(state, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    createSubjectStarted(state) {      
+      state.loading = true;
+      state.error = null;
+    },
+    createSubjectFulfilled(state, action: PayloadAction<ISubject>) {
+      state.loading = false;
+      state.subjects.push(action.payload);
+      state.error = null;
+    },
+    createSubjectRejected(state, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
+
+export const {
+  fetchSubjectsStarted,
+  fetchSubjectsFulfilled,
+  fetchSubjectsRejected,
+  createSubjectStarted,
+  createSubjectFulfilled,
+  createSubjectRejected,
+} = subjectSlice.actions;
 
 export default subjectSlice.reducer;
