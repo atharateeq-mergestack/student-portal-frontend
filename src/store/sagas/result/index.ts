@@ -8,14 +8,12 @@ import {
   createResultFulfilled, createResultRejected, 
   updateResultFulfilled, updateResultRejected, 
   deleteResultFulfilled, deleteResultRejected,
-  fetchResultsStarted
 } from 'store/reducers/result';
 import { RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API, DELETE_RESULT_API } from 'store/types';
 import { PayloadAction } from '@reduxjs/toolkit';
 
 function* fetchResultsSaga() {
   try {
-    yield put(fetchResultsStarted());
     const response : IApiResponse = yield call(getResult);
     yield put(fetchResultsFulfilled(response.data));
   } catch (error: any) {
