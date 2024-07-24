@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, Link } from 'react-router-dom';
@@ -12,10 +12,13 @@ import 'pages/Signup/style.css';
 
 const Signup = ()  => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<ISignup>({
+  const { register, handleSubmit, formState: { errors }, trigger, watch } = useForm<ISignup>({
     resolver: yupResolver(signupSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
   });
+
+  const password = watch('password')
+  const confirmPassword = watch('confirmPassword')
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,6 +35,10 @@ const Signup = ()  => {
       showToast(error);
     }
   };
+  useEffect(() =>{
+    if(password && confirmPassword)
+      trigger('confirmPassword');
+  }, [password, confirmPassword, trigger])
 
   return (
     <div className="signup-container">
