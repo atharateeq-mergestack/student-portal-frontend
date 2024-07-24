@@ -14,7 +14,7 @@ import { selectSubjectDropDown } from 'containers/selectors/subject';
 import { SUBJECTS_API, CREATE_SUBJECT_API, DELETE_RESULT_API, RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API } from 'store/types';
 
 // ====================  ModalContainer ====================
-const mapStateToPropsModal = () => {};
+const mapStateToPropsModal = () => ({});
 
 const mapDispatchToPropsModal = (dispatch: (action: PayloadAction<IResultData>) => void) => ({
   deleteResult: (data: IResultData) => dispatch({ type: DELETE_RESULT_API.STARTED, payload: data })
