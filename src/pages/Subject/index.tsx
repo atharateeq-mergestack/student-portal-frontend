@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
@@ -20,16 +19,10 @@ const Subject  = ({ loading, createSubject }: ISubjectProps) => {
     mode: 'onBlur',
   });
   
-  useEffect(() => {
-    if (loading) {
-      navigate('/dashboard');
-    }
-  }, [loading, navigate]);
-
   const onSubmit: SubmitHandler<ICreateSubject> = async (data) => {
     createSubject(data)
+    navigate('/dashboard');
   };
-
 
   return (
     <div className="subject-container">

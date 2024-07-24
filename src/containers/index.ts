@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import { ThunkDispatch } from '@reduxjs/toolkit';
-import { AnyAction } from 'redux';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction } from 'redux-saga';
 
 import { RootState } from 'store';
 import Modal from 'components/Modal';
@@ -11,14 +11,13 @@ import Subject from 'pages/Subject';
 import { IResultData, ICreateResult, ICreateSubject } from 'utils/types';
 import { selectCardData } from 'containers/selectors/result';
 import { selectSubjectDropDown } from 'containers/selectors/subject';
-import { createSubjectAction, fetchSubjectsAction } from 'store/reducers/subjectReducer';
-import { createResultAction, deleteResultAction, fetchResultsAction, updateResultAction } from 'store/reducers/resultReducer';
+import { SUBJECTS_API, CREATE_SUBJECT_API, DELETE_RESULT_API, RESULTS_API, CREATE_RESULT_API, UPDATE_RESULT_API } from 'store/types';
 
 // ====================  ModalContainer ====================
-const mapStateToPropsModal = () => {};
+const mapStateToPropsModal = () => ({});
 
-const mapDispatchToPropsModal = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  deleteResult: async (data: IResultData) => dispatch( deleteResultAction(data))
+const mapDispatchToPropsModal = (dispatch: (action: PayloadAction<IResultData>) => void) => ({
+  deleteResult: (data: IResultData) => dispatch({ type: DELETE_RESULT_API.STARTED, payload: data })
 });
 
 export const ModalContainer = connect(mapStateToPropsModal, mapDispatchToPropsModal)(Modal);
@@ -32,8 +31,8 @@ const mapStateToPropsSummaryCards = (state: RootState) => {
   };
 };
 
-const mapDispatchToPropsSummaryCards = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  fetchResults: async () => dispatch(fetchResultsAction())
+const mapDispatchToPropsSummaryCards = (dispatch: (action: AnyAction) => void) => ({
+  fetchResults: () => dispatch({ type: RESULTS_API.STARTED })
 });
 
 export const SummaryCardsContainer = connect(mapStateToPropsSummaryCards, mapDispatchToPropsSummaryCards)(SummaryCards);
@@ -44,8 +43,8 @@ const mapStateToPropsTable = (state: RootState) => ({
   fetched: state.results.fetched,
 });
 
-const mapDispatchToPropsTable = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  fetchResults: async () => dispatch(fetchResultsAction())
+const mapDispatchToPropsTable = (dispatch: (action: AnyAction) => void) => ({
+  fetchResults: () => dispatch({ type: RESULTS_API.STARTED })
 });
 
 export const TableContainer = connect(mapStateToPropsTable, mapDispatchToPropsTable)(Table);
@@ -57,10 +56,10 @@ const mapStateToPropsAddResult = (state: RootState) => ({
   fetched: state.subjects.fetched,
 });
 
-const mapDispatchToPropsAddResult = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  createResult: async (data: ICreateResult) => dispatch(createResultAction(data)),
-  updateResult: async (data: ICreateResult) => dispatch(updateResultAction(data)),
-  fetchSubjects: async () => dispatch(fetchSubjectsAction())
+const mapDispatchToPropsAddResult = (dispatch: (action: PayloadAction<ICreateResult> | AnyAction) => void) => ({
+  createResult: (data: ICreateResult) => dispatch({ type: CREATE_RESULT_API.STARTED, payload: data }),
+  updateResult: (data: ICreateResult) => dispatch({ type: UPDATE_RESULT_API.STARTED, payload: data }),
+  fetchSubjects: () => dispatch({ type: SUBJECTS_API.STARTED })
 });
 
 export const AddResultContainer = connect(mapStateToPropsAddResult, mapDispatchToPropsAddResult)(AddResult);
@@ -71,8 +70,8 @@ const mapStateToPropsSubject = (state: RootState) => ({
   error: state.subjects.error,
 });
 
-const mapDispatchToPropsSubject = (dispatch: ThunkDispatch<RootState, unknown, AnyAction>) => ({
-  createSubject: async (data: ICreateSubject) => dispatch(createSubjectAction(data))
+const mapDispatchToPropsSubject = (dispatch: (action: PayloadAction<ICreateSubject>) => void) => ({
+  createSubject: (data: ICreateSubject) => dispatch({ type: CREATE_SUBJECT_API.STARTED, payload: data })
 });
 
 export const SubjectContainer = connect(mapStateToPropsSubject, mapDispatchToPropsSubject)(Subject);
