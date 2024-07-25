@@ -86,6 +86,14 @@
   justify-content: space-between;
 }
 
+.date-section{
+  color: #343744;
+}
+
+.time-section{
+  color: #798BA3;
+}
+
 .result-container .form-group button {
   padding: 10px 20px;
   border: #343744 1px solid;

@@ -9,8 +9,8 @@ const DateTimeDisplay = ({ date } : IDateTimeDisplayProps) => {
 
   return (
     <div>
-      <div>{formattedDate}</div>
-      <div>at {formattedTime}</div>
+      <div className='date-section'>{formattedDate}</div>
+      <div className='time-section'>at {formattedTime}</div>
     </div>
   );
 };
