@@ -174,7 +174,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1;
-  left: 55%;
+  right: 55%;
   top: -50%;
   width: 100px;
   display: flex;

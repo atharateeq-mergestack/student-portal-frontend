@@ -4,14 +4,17 @@ export const signupSchema = yup.object().shape({
   firstName: yup
     .string()
     .required('First Name is required')
+    .trim()
     .matches(/^[a-zA-Z]+$/, 'First Name must contain only letters'),
   lastName: yup
     .string()
     .required('Last Name is required')
+    .trim()
     .matches(/^[a-zA-Z]+$/, 'Last Name must contain only letters'),
   userName: yup
     .string()
     .required('Username is required')
+    .trim()
     .matches(/^[a-zA-Z0-9]+$/, 'Username must be alphanumeric'),
   email: yup
     .string()
@@ -57,6 +60,7 @@ export const loginSchema = yup.object().shape({
     studentName: yup
       .string()
       .required('Student name is required')
+      .trim()
       .matches(/^[a-zA-Z\s]*$/, 'Student name has invalid entry.'),
     subjectId: yup
       .string()
