@@ -1,18 +1,18 @@
-import { FieldError } from 'react-hook-form';
+import { FieldError, Control, Controller } from 'react-hook-form';
 import { AiFillExclamationCircle } from 'react-icons/ai';
-import Select, { StylesConfig } from 'react-select';
+import Select, { StylesConfig, SingleValue } from 'react-select';
 
 interface ISelectProps {
   id: string;
   label: string;
   options: { value: string; label: string }[];
-  onChange: (selectedOption: any) => void;
   classNamePrefix?: string;
   className?: string;
   placeholder?: string;
   styles?: StylesConfig;
-  defaultValue?: { value: string; label: string } | null;
   error?: FieldError;
+  name: string;
+  control: Control<any>;
 }
 
 const customStyles: StylesConfig = {
@@ -41,25 +41,38 @@ const SelectComponent = ({
   id,
   label,
   options,
-  onChange,
   classNamePrefix = 'react-select',
   className,
   placeholder,
   styles = customStyles,
-  defaultValue,
+  control,
+  name,
   error
 }: ISelectProps) => (
   <div className={`form-group ${error ? 'input-error' : ''}`}>
     <label htmlFor={id}>{label}</label>
-    <Select
-      id={id}
-      options={options}
-      onChange={onChange}
-      classNamePrefix={classNamePrefix}
-      className={className}
-      placeholder={placeholder}
-      styles={styles}
-      defaultValue={defaultValue}
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => {          
+          const { value, onChange } = field;
+          const selectedOption = options.find(option => option.value === value);
+          return (
+            <Select
+              {...field}
+              value={selectedOption || null}
+              options={options}
+              classNamePrefix={classNamePrefix}
+              className={className}
+              placeholder={placeholder}
+              styles={styles}
+              onChange={(newValue) => {
+                onChange((newValue as SingleValue<{ value: string; label: string }>)?.value || null);
+              }}
+            />
+
+          );
+        }}
     />
     {error && <AiFillExclamationCircle className="error-icon" />}
     {error && <p>{error.message}</p>}

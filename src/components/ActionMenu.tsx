@@ -18,7 +18,7 @@ const ActionMenu = ({ dropdownRef, setShowModal, setDropdownVisible, selectedStu
 
   const handleEdit = () => {
     if (selectedStudent) {
-      navigate('/result/add', { state: { student: selectedStudent, isUpdate: true } });
+      navigate(`/result/add/?id=${selectedStudent._id}`);
     }
     setDropdownVisible(false);
   };

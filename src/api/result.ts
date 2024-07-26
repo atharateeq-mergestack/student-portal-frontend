@@ -46,3 +46,14 @@ export const deleteResult = async (data: IResultData): Promise<IApiResponse> => 
        return handleAxiosError(error);
     }
 };
+
+export const fetchResultById = async (data: string): Promise<IApiResponse> => {
+    try {
+        const response = await axiosInstance.get<IApiResponse>(
+            `${CONSTANTS.ENDPOINTS.RESULT}/${data}`, 
+        );
+        return response.data;
+    } catch (error) {
+       return handleAxiosError(error);
+    }
+};
