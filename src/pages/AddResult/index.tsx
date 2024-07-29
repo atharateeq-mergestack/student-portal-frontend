@@ -16,12 +16,14 @@ import showToast from 'utils/toastMessage';
 interface IAddResultProps {
   subjects: ISubjectsDropDown[];
   fetched: boolean;
+  resultLoading: boolean;
+  resultError: any;
   createResult: (data: ICreateResult) => void;
   updateResult: (data: ICreateResult) => void;
   fetchSubjects: () => void;
 }
 
-function AddResult({ subjects, fetched, fetchSubjects, createResult, updateResult }: IAddResultProps) {
+function AddResult({ subjects, fetched, resultLoading, resultError, fetchSubjects, createResult, updateResult }: IAddResultProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -55,6 +57,16 @@ function AddResult({ subjects, fetched, fetchSubjects, createResult, updateResul
     fetchExistingData();
   }, [isUpdate, studentId, reset, navigate]);
 
+  useEffect(() => {
+    if (!resultLoading && !resultError) {
+      navigate('/dashboard');
+    } else if (resultError) {
+      console.log(resultError);
+      
+      // showToast({ message: resultError, success: false });
+    }
+  }, [resultLoading, resultError, navigate]);
+  
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
     const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
     if (isUpdate) {
