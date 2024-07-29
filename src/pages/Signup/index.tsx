@@ -9,10 +9,11 @@ import { IApiResponse, ISignup } from 'utils/types';
 import showToast from 'utils/toastMessage';
 import Input from 'components/Input';
 import 'pages/Signup/style.css';
+import { handleValidationErrors } from 'utils/handleValidationFieldErrors';
 
 const Signup = ()  => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors }, trigger, watch } = useForm<ISignup>({
+  const { register, handleSubmit, formState: { errors }, setError, trigger, watch } = useForm<ISignup>({
     resolver: yupResolver(signupSchema),
     mode: 'onChange',
   });
@@ -26,13 +27,13 @@ const Signup = ()  => {
 
   const onSubmit: SubmitHandler<ISignup> = async (data) => {
     try {
-      const response : IApiResponse = await signupUser(data);
+      const response: IApiResponse = await signupUser(data);
       if (response.success) {
         showToast(response);
         navigate('/login');
       }
     } catch (error: IApiResponse | any) {
-      showToast(error);
+      handleValidationErrors<ISignup>(error, setError);
     }
   };
   useEffect(() =>{
