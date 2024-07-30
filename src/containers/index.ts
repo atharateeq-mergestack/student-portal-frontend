@@ -54,6 +54,8 @@ const mapStateToPropsAddResult = (state: RootState) => ({
   loading: state.subjects.loading,
   subjects: selectSubjectDropDown(state),
   fetched: state.subjects.fetched,
+  resultLoading: state.results.loading,
+  resultError: state.results.error,
 });
 
 const mapDispatchToPropsAddResult = (dispatch: (action: PayloadAction<ICreateResult> | AnyAction) => void) => ({

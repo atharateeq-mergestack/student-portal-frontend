@@ -9,7 +9,7 @@ function Dashboard() {
       <div className="dashboard-top-container">
         <h1 className="dashboard-top-header">Student Portal</h1>
       </div>
-      <hr className='bar-line'/>
+      <hr />
       <div className="dashboard-container">
         <DashboardHeader />
         <SummaryCardsContainer />

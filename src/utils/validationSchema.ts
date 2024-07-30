@@ -4,14 +4,17 @@ export const signupSchema = yup.object().shape({
   firstName: yup
     .string()
     .required('First Name is required')
+    .trim()
     .matches(/^[a-zA-Z]+$/, 'First Name must contain only letters'),
   lastName: yup
     .string()
     .required('Last Name is required')
+    .trim()
     .matches(/^[a-zA-Z]+$/, 'Last Name must contain only letters'),
   userName: yup
     .string()
     .required('Username is required')
+    .trim()
     .matches(/^[a-zA-Z0-9]+$/, 'Username must be alphanumeric'),
   email: yup
     .string()
@@ -44,9 +47,12 @@ export const loginSchema = yup.object().shape({
     subjectName: yup
       .string()
       .required('Subject name is required')
-      .matches(/^[a-zA-Z0-9!@#$%^&*()_+{}:;<>,.?~\\-\s]*$/, 'Subject name has invalid entry.'),
-      subjectDescription: yup
+      .trim()
+      .min(1, 'Subject name cannot be all white space')
+      .matches(/^[a-zA-Z][a-zA-Z0-9\s]*$/, 'Subject name must start with a letter and can contain letters, numbers, and spaces.'),
+    subjectDescription: yup
       .string()
+      .trim()
       .matches(/^[a-zA-Z0-9!@#$%^&*()_+{}:;<>,.?~\\-\s]*$/, 'Subject description has invalid entry.'),
   });
 
@@ -54,13 +60,15 @@ export const loginSchema = yup.object().shape({
     studentName: yup
       .string()
       .required('Student name is required')
+      .trim()
       .matches(/^[a-zA-Z\s]*$/, 'Student name has invalid entry.'),
     subjectId: yup
       .string()
       .required('Subject is required'),
     marks: yup
       .number()
-      .required('Marks are required')
+      .typeError('Marks must be a valid number')
+      .required('Marks are required') 
       .min(0, 'Marks must be at least 0')
       .max(100, 'Marks must be at most 100'),
     grade: yup
@@ -68,4 +76,3 @@ export const loginSchema = yup.object().shape({
       .required('Grade is required')
       .matches(/^[A-F][+-]?$/, 'Grade has invalid entry.'),
   });
-  

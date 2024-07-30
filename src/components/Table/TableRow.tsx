@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import ActionIcon from 'components/Icons/ActionIcon';
 import ActionMenu from 'components/ActionMenu';
@@ -16,21 +16,21 @@ const TableRow = ({ student,} : ITableRowProps) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<IResultData | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownVisible(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-  }, []);
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setDropdownVisible(false);
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  };
 
   const handleActionClick = (student: IResultData) => {
     setSelectedStudent(student);
-    setDropdownVisible(!dropdownVisible);
-  };
+    setDropdownVisible((prevState) => !prevState);
+    document.addEventListener("mousedown", handleClickOutside);
+    };
 
   return (
     <div className="table-row">

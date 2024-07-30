@@ -5,61 +5,82 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { omitBy } from 'lodash';
 
 import { resultSchema } from 'utils/validationSchema';
-import { ICreateResult, IResultData, ISubjectsDropDown } from 'utils/types';
+import { ICreateResult, ISubjectsDropDown } from 'utils/types';
 import { grades } from 'utils/grades';
 import SelectComponent from 'components/SelectComponent';
 import Input from 'components/Input';
 import 'pages/AddResult/style.css';
+import { fetchResultById } from 'api/result';
+import showToast from 'utils/toastMessage';
 
-interface IAddResultProps{
+interface IAddResultProps {
   subjects: ISubjectsDropDown[];
   fetched: boolean;
+  resultLoading: boolean;
+  resultError: any;
   createResult: (data: ICreateResult) => void;
   updateResult: (data: ICreateResult) => void;
   fetchSubjects: () => void;
 }
 
-function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult}: IAddResultProps) {
+function AddResult({ subjects, fetched, resultLoading, resultError, fetchSubjects, createResult, updateResult }: IAddResultProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const existingData : IResultData = location.state?.student;
-  const isUpdate : boolean = location.state?.isUpdate || false;
+  const queryParams = new URLSearchParams(location.search);
+  const studentId = queryParams.get('id');
+  const isUpdate = Boolean(studentId);
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<ICreateResult>({
+  const { control, register, handleSubmit, formState: { errors }, reset } = useForm<ICreateResult>({
     resolver: yupResolver(resultSchema),
-    mode: 'onBlur',
-    defaultValues: { ...existingData, subjectId: existingData?.subjectId._id } || {}
+    mode: 'onChange',
   });
 
-  useEffect(() => {  
-    if(!fetched)  {
-      fetchSubjects()
-   }
-  }, [ fetched, fetchSubjects ]);
+  useEffect(() => {
+    if (!fetched) {
+      fetchSubjects();
+    }
+  }, [fetched, fetchSubjects]);
 
+
+  useEffect(() => {
+    const fetchExistingData = async () => {
+      if (isUpdate && studentId) {
+        const response = await fetchResultById(studentId);        
+        if (response.success && response.data) {
+          reset({ ...response.data, subjectId: response.data.subjectId._id });
+        }else{
+          showToast({...response, message:"Record has been deleted.",  success:false})
+          navigate('/dashboard');          
+        }
+      }
+    };
+    fetchExistingData();
+  }, [isUpdate, studentId, reset, navigate]);
+
+  useEffect(() => {
+    if (!resultLoading && !resultError) {
+      navigate('/dashboard');
+    } else if (resultError) {
+      console.log(resultError);
+      
+      // showToast({ message: resultError, success: false });
+    }
+  }, [resultLoading, resultError, navigate]);
+  
   const onSubmit: SubmitHandler<ICreateResult> = async (data) => {
     const filteredData = omitBy(data, (value) => value === '') as ICreateResult;
-    if (isUpdate && existingData) {
-      updateResult({...existingData, ...filteredData})
+    if (isUpdate) {
+      updateResult(filteredData);
     } else {
-      createResult(filteredData)
+      createResult(filteredData);
     }
     navigate('/dashboard');
   };
 
-  const handleSubjectChange = (selectedOption: any) => {
-    setValue('subjectId', selectedOption.value);
-  };
-
-  const handleGradeChange = (selectedOption: any) => {
-    setValue('grade', selectedOption.value);
-  };
-
   return (
     <div className="result-container">
-      <h1>{isUpdate ? 'Update' : 'Add'} Student Data</h1>
+      <h1>{isUpdate ? 'Edit' : 'Add'} Student Data</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-
         <Input 
           id="studentName" 
           label="Student Name" 
@@ -72,21 +93,19 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
         <SelectComponent
           id="subjectId"
           label="Subject"
+          name='subjectId'
           options={subjects}
-          onChange={handleSubjectChange}
           classNamePrefix="react-select"
           className={errors.subjectId ? 'input-error' : ''}
           placeholder="Select a subject"
-          defaultValue={
-            existingData && { value: existingData.subjectId._id, label: existingData.subjectId.subjectName }
-          }
           error={errors.subjectId}
-        />
+          control={control}
+        /> 
 
         <Input 
           id="marks" 
           label="Marks" 
-          type="text" 
+          type="number" 
           placeholder="Enter marks" 
           register={register} 
           error={errors.marks} 
@@ -94,15 +113,15 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
 
         <SelectComponent
           id="grade"
-          label="Grade"
+          label="Subject"
+          name='grade'
           options={grades}
-          onChange={handleGradeChange}
           classNamePrefix="react-select"
           className={errors.grade ? 'input-error' : ''}
           placeholder="Select a grade"
-          defaultValue={grades.find(grade => grade.value === existingData?.grade)}
           error={errors.grade}
-        />
+          control={control}
+        /> 
 
         <div className="form-group">
           <div className='button-group'>
@@ -110,7 +129,6 @@ function AddResult({subjects, fetched, fetchSubjects, createResult, updateResult
             <button type="submit">{isUpdate ? 'Update' : 'Add'}</button>
           </div>
         </div>
-        
       </form>
     </div>
   );

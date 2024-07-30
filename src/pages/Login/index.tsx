@@ -9,10 +9,11 @@ import { loginUser } from 'api/user';
 import showToast from 'utils/toastMessage';
 import Input from 'components/Input';
 import 'pages/Login/style.css';
+import { handleValidationErrors } from 'utils/handleValidationFieldErrors';
 
 const Login = ()  => {
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<ILogin>({
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<ILogin>({
     resolver: yupResolver(loginSchema),
     mode: 'onBlur',
   });
@@ -29,7 +30,7 @@ const Login = ()  => {
         navigate('/dashboard');
       }
     } catch (error: IApiResponse | any) {
-      showToast(error);
+      handleValidationErrors<ILogin>(error, setError);
     }
   };
 

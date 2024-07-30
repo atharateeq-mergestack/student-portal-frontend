@@ -33,7 +33,7 @@ export function calculateStats(resultData: IResultData[]): Istats | undefined {
   return {
     highestGrade: highestGrade,
     lowestGrade,
-    mostPassedSubject: highestPassCountSubject,
+    mostPassedSubject: subjectPassCount[highestPassCountSubject] === 0 ? "--": highestPassCountSubject,
     mostFailedSubject: subjectFailCount[highestFailCountSubject] === 0 ? "--" : highestFailCountSubject,
   };
 }
